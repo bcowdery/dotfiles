@@ -1,0 +1,99 @@
+[user]
+    name = Brian Cowdery
+    email = brian_cowdery@trimble.com
+	
+[core]
+    whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+    autocrlf = true
+
+[push]
+    default = matching
+
+[diff "exif"]
+    textconv = exiftool
+
+[diff "word"]
+    textconv = strings
+
+[color]
+    diff = auto 
+    status = auto
+    branch = auto
+    ui = true
+
+[color "branch"]
+    current = cyan bold
+    local = cyan
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+
+[color "status"]
+    added = green
+    changed = cyan
+    untracked = red
+
+[alias]    
+    wdiff = diff --color-words
+    wshow = show --color-words    
+    changes = diff --name-status -r
+    graph = log --oneline --date-order --graph --decorate
+    changelog = log --oneline --date-order --decorate --no-merges
+    whichtag = describe --tags --abbrev=0
+    patch = format-patch -M --ignore-space-change
+    stat = log --stat --no-merges
+    last = log -1 HEAD
+    fix = commit --amend -C HEAD
+    undo = reset --soft HEAD^
+    unstage = reset HEAD --
+
+    # remove all untracked files and reset all changed files
+    clobber = "!git clean -df; git checkout -- ."
+
+    # fix broke-ass line endings
+    fixeol = "!git add . -u && git commit -m 'Saving files before refreshing line endings' && git rm --cached -r . && git reset --hard && git add . && git commit -m 'Normalize line endings'"
+
+    # list branches sorted by last modified
+    branches = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
+    
+    # search
+    find = "!git ls-files | grep -i"
+    grep = grep -Ii
+
+    # push everything including tags
+    pushit = "!git push origin -u --all; git push origin --tags"
+
+    # pull and rebase local changes to the new head without creating a merge commit
+    pullit = "!git pull --rebase --prune $@ && git submodule update --init --recursive"
+
+    # prep for a merge, update master and develop
+    prep = "!git stash && git checkout master && git pull && git checkout develop && git pull"
+
+    # merge helpers, take ours or theirs
+    ours = "!f() { git checkout --ours $@ && git add $@; }; f"
+    theirs = "!f() { git checkout --theirs $@ && git add $@; }; f"
+    
+    # shortcuts
+    st = status
+    ci = commit
+    br = branch
+    co = checkout
+    df = diff
+    lg = log -p
+    who = shortlog -s --
+
+    # typos
+    dif = diff
+    psuh = push
+
+    # list aliases
+    aliases = "!git config -l | grep alias | cut -c 7-"
+
+
+[help]
+	autocorrect = 1
