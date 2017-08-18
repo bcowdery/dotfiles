@@ -3,8 +3,7 @@ Dotfiles
 Contains user dotfiles for bash, vim and gitconfigs.
 
 
-1. Boxen Puppet class
-
+# Boxen Puppet class
 
 Per-user manifests live in `modules/people/manifests/$login.pp`, where
 `$login` is a GitHub login. A simple user manifest example:
