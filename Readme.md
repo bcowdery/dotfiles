@@ -1,7 +1,6 @@
 Dotfiles
 ========
 
-
 * [Homebrew](https://brew.sh/)
 * [Homebrew-Cask](https://caskroom.github.io/)
 
