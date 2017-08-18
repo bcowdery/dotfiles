@@ -9,8 +9,9 @@ tap "homebrew/versions"
 
 # Core dependencies
 cask "java" unless system "/usr/libexec/java_home --failfast"
+cask "xquartz"
 
-# Command line apps
+# Command line tools and languages
 brew "ack"
 brew "asciinema"
 brew "awk"
@@ -81,7 +82,7 @@ brew "tree"
 brew "unrar"
 brew "unzip"
 brew "vim", args: ["with-client-server", "with-luajit", "override-system-vi"]
-brew "wget", args: ["with-gpgme"]
+brew "wget", args: ["enable-iri"]
 brew "whois"
 brew "zlib"
 brew "zsh"
@@ -91,7 +92,7 @@ brew "zsh-completions"
 brew 'homebrew/dupes/grep'
 
 # Desktop apps to install via Cask
-cask "audim"
+cask "adium"
 cask "atom"
 cask "firefox"
 cask "google-chrome"
@@ -112,7 +113,6 @@ cask "vagrant-manager"
 cask "virtualbox"
 cask 'virtualbox-extension-pack'
 cask "vlc"
-cask "xquartz"
 
 # Quicklook
 cask 'qlcolorcode'
