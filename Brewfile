@@ -2,9 +2,10 @@
 
 cask_args appdir: "/Applications"
 tap "caskroom/cask"
+tap "caskroom/fonts"
 tap "caskroom/versions"
-tap 'homebrew/dupes'
-tap 'homebrew/versions'
+tap "homebrew/dupes"
+tap "homebrew/versions"
 
 # Core dependencies
 cask "java" unless system "/usr/libexec/java_home --failfast"
@@ -15,13 +16,13 @@ brew "asciinema"
 brew "awk"
 brew "aws-shell"
 brew "awscli"
-brew "bash-completion"
 brew "bash"
 brew "bc"
 brew "bfg"
 brew "boost"
 brew "bzip2"
 brew "cloc"
+brew "coreutils"
 brew "curl"
 brew "diffstat"
 brew "diffutils"
@@ -29,12 +30,11 @@ brew "ec2-ami-tools"
 brew "ec2-api-tools"
 brew "ed"
 brew "elm"
-brew "emacs", args: ["with-cocoa", "with-gnutls"]
 brew "expect"
 brew "ffmpeg"
 brew "filebeat"
 brew "findutils"
-brew "git"
+brew "git", args: ["--without-completions"]
 brew "git-extras"
 brew "git-flow"
 brew "gnu-tar"
@@ -85,6 +85,10 @@ brew "wget", args: ["with-gpgme"]
 brew "whois"
 brew "zlib"
 brew "zsh"
+brew "zsh-completions"
+
+# Install more recent versions of some macOS tools
+brew 'homebrew/dupes/grep'
 
 # Desktop apps to install via Cask
 cask "audim"
@@ -99,18 +103,34 @@ cask "intellij-idea"
 cask "istat-menus"
 cask "iterm2"
 cask "osxfuse"
-cask "screenhero"
-cask "sketch"
+cask "slack"
 cask "spotify"
 cask "the-unarchiver"
 cask "transmission"
 cask "vagrant"
 cask "vagrant-manager"
 cask "virtualbox"
-cask "visual-studio-code"
+cask 'virtualbox-extension-pack'
 cask "vlc"
 cask "xquartz"
+
+# Quicklook
+cask 'qlcolorcode'
+cask 'qlmarkdown'
+cask 'quicklook-json'
+cask 'quicklook-csv'
+cask 'qlstephen'
+
+# Fonts
+cask 'font-sauce-code-powerline'
+cask 'font-source-code-pro'
+cask 'font-source-sans-pro'
+cask 'font-source-serif-pro'
 
 # Appstore apps
 mas 'Numbers', id: 409203825
 mas 'Pages', id: 409201541
+mas 'Sketch', id: 402476602
+
+# Clean
+cleanup

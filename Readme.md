@@ -1,29 +1,38 @@
 Dotfiles
 ========
-Contains user dotfiles for bash, vim and gitconfigs.
 
 
-1. Boxen Puppet class
+* [Homebrew](https://brew.sh/)
+* [Homebrew-Cask](https://caskroom.github.io/)
 
+# Install RVM (Ruby Version Manager)
 
-Per-user manifests live in `modules/people/manifests/$login.pp`, where
-`$login` is a GitHub login. A simple user manifest example:
+Install the latest stable version of ruby using RVM. RVM allows you to easily
+install, mange and work with multiple versions of ruby. Ruby is required to run
+Homebrew so we'll need to get that out of the way first.
 
-```puppet
-class people::bcowdery {
-  include projects::all
+```
+$ curl -sSL https://get.rvm.io | bash -s stable --ruby
+```
 
-    $home     = "/Users/${::boxen_user}"
-    $my       = "${home}/my"
-    $dotfiles = "${my}/dotfiles"
+# Install Homebrew & Cask
 
-    file { $my:
-      ensure  => directory
-    }
-	        }
-    repository { $dotfiles:
-       source  => 'bcowdery/dotfiles',
-       require => File[$my]
-    }
-}
+Install the homebrew package manager for macOS, and the Homebrew-Cask extensions for
+community applications installers and large binary packages.
+
+```
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+```
+$ brew install caskroom/cask/brew-cask
+```
+
+## Brewfile Install
+```
+$ brew bundle
+```
+
+## Oh My zsh
+```
+curl -L http://install.ohmyz.sh | sh
 ```
