@@ -1,37 +1,27 @@
 Dotfiles
 ========
 
-* [Homebrew](https://brew.sh/)
-* [Homebrew-Cask](https://caskroom.github.io/)
+Common dotfiles and [Homebrew](https://brew.sh/) setups scripts for configuring my macOS development environment.
 
-# Install RVM (Ruby Version Manager)
+# Installation
 
-Install the latest stable version of ruby using RVM. RVM allows you to easily
-install, mange and work with multiple versions of ruby. Ruby is required to run
-Homebrew so we'll need to get that out of the way first.
+## Using Git and the setup scripts
 
-```
-$ curl -sSL https://get.rvm.io | bash -s stable --ruby
-```
-
-# Install Homebrew & Cask
-
-Install the homebrew package manager for macOS, and the Homebrew-Cask extensions for
-community applications installers and large binary packages.
+You can clone the repository wherever you want, although `~/.dotfiles` is preferred. The bootstrapper setup script will pull in the latest versions and copy the files to your home folder.
 
 ```
-$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-```
-```
-$ brew install caskroom/cask/brew-cask
+git clone https://github.com/bcowdery/dotfiles.git ~/.dotfiles && cd ~/.dotfiles && ./bin/setup.sh
 ```
 
-## Brewfile Install
+To update, `cd` into your local `./dotfiles` repository and run
 ```
-$ brew bundle
+./bin/setup.sh
 ```
 
-## Oh My zsh
+## Git-free install
+
+To install these dotfiles without Git:
+
 ```
-curl -L http://install.ohmyz.sh | sh
+cd; curl -#L https://github.com/bcowdery/dotfiles/tarball/master | tar -xzv --strip-components 1
 ```

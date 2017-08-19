@@ -4,7 +4,6 @@ cask_args appdir: "/Applications"
 tap "caskroom/cask"
 tap "caskroom/fonts"
 tap "caskroom/versions"
-tap "homebrew/dupes"
 tap "homebrew/versions"
 
 # Core dependencies
@@ -39,6 +38,7 @@ brew "git", args: ["--without-completions"]
 brew "git-extras"
 brew "git-flow"
 brew "gnu-tar"
+brew "gnu-sed", args: ["--with-default-names"]
 brew "gnupg2"
 brew "go"
 brew "gpatch"
@@ -81,15 +81,12 @@ brew "tmux"
 brew "tree"
 brew "unrar"
 brew "unzip"
-brew "vim", args: ["with-client-server", "with-luajit", "override-system-vi"]
-brew "wget", args: ["enable-iri"]
+brew "vim", args: ["--with-luajit", "--override-system-vi"]
+brew "wget", args: ["--with-iri"]
 brew "whois"
 brew "zlib"
 brew "zsh"
 brew "zsh-completions"
-
-# Install more recent versions of some macOS tools
-brew 'homebrew/dupes/grep'
 
 # Desktop apps to install via Cask
 cask "adium"
