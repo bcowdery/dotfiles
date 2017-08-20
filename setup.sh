@@ -14,14 +14,10 @@ for f in ./bin/*.sh; do source "$f"; done;
 # git'er done
 install_ruby
 install_homebrew
+install_brewfile
+install_ohmyzsh
 
-# Install Brefile
-printf "Installing Brewfile... $yellow\n" "Working •"
-
-brew update
-brew tap caskroom/cask
-brew bundle
-
-# zsh
 configure_zsh
 configure_dotfiles
+
+printf "$green\n" "All Done!"

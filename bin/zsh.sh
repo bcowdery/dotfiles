@@ -1,7 +1,6 @@
 #!/bin/bash
 
 function configure_zsh() {
-  # Set ZSH as the default shell
   printf "Setting ZSH as default shell... "
 
   if ! fgrep -q '/usr/local/bin/zsh' /etc/shells; then
@@ -11,4 +10,21 @@ function configure_zsh() {
   else
     printf "$green\n" "Ok ✓"
   fi;
+
+  source ~/.zshrc;
+}
+
+function install_ohmyzsh() {
+    printf "Installing Oh My Zsh... "
+
+    if [ ! -d ~/.oh-my-zsh ]; then
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    fi
+
+    if [ ! -x ~/.oh-my-zsh/oh-my-zsh.sh ]; then
+        printf "$red\n" "Failed ✗";
+        exit;
+    fi
+
+    printf "$green\n" "Ok ✓"
 }

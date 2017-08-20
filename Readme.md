@@ -1,27 +1,28 @@
 Dotfiles
 ========
 
-Common dotfiles and [Homebrew](https://brew.sh/) setups scripts for configuring my macOS development environment.
+My .dotfiles, configurations and unattented software installs for macOS.
+
+* Installs [RVM](https://rvm.io)
+* Installs [Homebrew](https://brew.sh/)
+* Installs [Homebrew-Cask](https://caskroom.github.io)
+* Installs all software in [Brewfile](Brewfile)
+* Sets ZSH to the shell default
+* Copies dotfiles to the user $HOME
+
 
 # Installation
 
-## Using Git and the setup scripts
-
-You can clone the repository wherever you want, although `~/.dotfiles` is preferred. The bootstrapper setup script will pull in the latest versions and copy the files to your home folder.
+You can clone the repository wherever you want, although `~/.dotfiles` is preferred. The [setup](setup.sh) script will pull in the latest version, install all the software and copy dotfiles to their new $HOME.
 
 ```
-git clone https://github.com/bcowdery/dotfiles.git ~/.dotfiles && cd ~/.dotfiles && ./bin/setup.sh
+git clone https://github.com/bcowdery/dotfiles.git ~.dotfiles && ./dotfiles/setup.sh
 ```
 
-To update, `cd` into your local `./dotfiles` repository and run
-```
-./bin/setup.sh
-```
+## Updating
 
-## Git-free install
-
-To install these dotfiles without Git:
+You can update your installation at any time by running the setup script agian. It will automatically pull the latest sources from git and invoke Homebrew to update software and install new packages.
 
 ```
-cd; curl -#L https://github.com/bcowdery/dotfiles/tarball/master | tar -xzv --strip-components 1
+~/.dotfiles/setup.sh
 ```

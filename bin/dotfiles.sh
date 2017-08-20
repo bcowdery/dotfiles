@@ -6,7 +6,6 @@ function rsync_dotfiles() {
 		--exclude "setup.sh" \
 		--exclude "Readme.md" \
 		-avh --no-perms --quiet . ~;
-	source ~/.bash_profile;
 }
 
 function configure_dotfiles() {
@@ -26,6 +25,4 @@ function configure_dotfiles() {
       * ) printf "Skiping dotfiles.\n"
     esac
   fi;
-
-  printf "$green\n" "Done."
 }
