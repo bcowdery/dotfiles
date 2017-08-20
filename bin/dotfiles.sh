@@ -2,6 +2,7 @@
 
 function rsync_dotfiles() {
 	rsync --exclude "bin/" \
+	  --exclude "init/" \
 	  --exclude ".git/" \
 		--exclude ".macos" \
 		--exclude "setup.sh" \

@@ -1,7 +1,7 @@
 Dotfiles
 ========
 
-My .dotfiles, configurations and unattented software installs for macOS.
+My .dotfiles, configurations and unattended software installs for macOS.
 
 * Installs [RVM](https://rvm.io)
 * Installs [Homebrew](https://brew.sh/)
@@ -21,7 +21,7 @@ git clone https://github.com/bcowdery/dotfiles.git ~.dotfiles && ./dotfiles/setu
 
 ## Staying up to date
 
-You can update your installation at any time by running the setup script agian. It will automatically pull the latest sources from git and invoke Homebrew to update software and install new packages.
+You can update your installation at any time by running the setup script again. It will automatically pull the latest sources from git and invoke Homebrew to update software and install new packages from the `Brewfile` formulae.
 
 ```
 ~/.dotfiles/setup.sh
@@ -29,7 +29,7 @@ You can update your installation at any time by running the setup script agian. 
 
 ## Sensible macOS defaults
 
-When setting up a new Mac, you may want to set up some sensible macOS DEFAULT_USER
+When setting up a new Mac, you may want to set up some sensible macOS defaults
 
 ```
 ./.macos
@@ -53,7 +53,7 @@ Here’s an example `~/.path` file that adds `/usr/local/bin` to the `$PATH`:
 export PATH="/usr/local/bin:$PATH"
 ```
 
-## Git Credentials
+## Customizations
 
 You can use `~/.extra` to add a few customizations without the need to fork this entire repository, or to add configuration that you don’t want to commit to a public repository.
 
@@ -107,3 +107,5 @@ Source code and examples were taken from all over the place. Special thanks to:
   [https://github.com/mathiasbynens/dotfiles](https://github.com/mathiasbynens/dotfiles)
 * [@mbadolato](https://github.com/mbadolato) (Mark Badolato)
   [iTerm2-Color-Schemes](https://github.com/mbadolato/iTerm2-Color-Schemes)
+* [@kevinSuttle](https://github.com/kevinSuttle) (Kevin Suttle)
+  [macOS-Defaults](https://github.com/kevinSuttle/macOS-Defaults/blob/master/REFERENCE.md)
