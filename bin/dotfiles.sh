@@ -3,6 +3,7 @@
 function rsync_dotfiles() {
 	rsync --exclude "bin/" \
 	  --exclude ".git/" \
+		--exclude ".macos" \
 		--exclude "setup.sh" \
 		--exclude "Readme.md" \
 		-avh --no-perms --quiet . ~;

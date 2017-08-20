@@ -27,7 +27,7 @@ You can update your installation at any time by running the setup script agian. 
 ~/.dotfiles/setup.sh
 ```
 
-# macOS
+## Sensible macOS defaults
 
 When setting up a new Mac, you may want to set up some sensible macOS DEFAULT_USER
 
@@ -45,7 +45,7 @@ If any of these files exist, they will be sourced along with the main `~/.zshrc`
 - `.functions` - Shell functions
 - `.extra` - User specific extra's that you generally don't want to commit to github
 
-## $PATH
+## Path
 
 Here’s an example `~/.path` file that adds `/usr/local/bin` to the `$PATH`:
 
