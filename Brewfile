@@ -87,6 +87,8 @@ brew "whois"
 brew "zlib"
 brew "zsh"
 brew "zsh-completions"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
 
 # Desktop apps to install via Cask
 cask "adium"
@@ -94,7 +96,7 @@ cask "atom"
 cask "firefox"
 cask "google-chrome"
 cask "google-cloud-sdk"
-cask "google-drive"
+cask "google-backup-and-sync"
 cask "handbrake"
 cask "insomnia"
 cask "intellij-idea"
@@ -119,10 +121,11 @@ cask 'quicklook-csv'
 cask 'qlstephen'
 
 # Fonts
-cask 'font-sauce-code-powerline'
+cask 'font-inconsolata'
 cask 'font-source-code-pro'
 cask 'font-source-sans-pro'
 cask 'font-source-serif-pro'
+cask 'font-source-code-pro-for-powerline'
 
 # Appstore apps
 mas 'Numbers', id: 409203825
