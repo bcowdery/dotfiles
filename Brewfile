@@ -128,6 +128,3 @@ cask 'font-source-serif-pro'
 mas 'Numbers', id: 409203825
 mas 'Pages', id: 409201541
 mas 'Sketch', id: 402476602
-
-# Clean
-cleanup
