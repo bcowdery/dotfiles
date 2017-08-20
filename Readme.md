@@ -19,7 +19,7 @@ You can clone the repository wherever you want, although `~/.dotfiles` is prefer
 git clone https://github.com/bcowdery/dotfiles.git ~.dotfiles && ./dotfiles/setup.sh
 ```
 
-## Updating
+## Staying up to date
 
 You can update your installation at any time by running the setup script agian. It will automatically pull the latest sources from git and invoke Homebrew to update software and install new packages.
 
@@ -27,6 +27,51 @@ You can update your installation at any time by running the setup script agian. 
 ~/.dotfiles/setup.sh
 ```
 
+# macOS
+
+When setting up a new Mac, you may want to set up some sensible macOS DEFAULT_USER
+
+```
+./.macos
+```
+
+# Extras
+
+If any of these files exist, they will be sourced along with the main `~/.zshrc`. These files provide extension points for the shell environment organized by convention.
+
+- `.path` - Additions to the `$PATH`
+- `.exports` - Export environment variables, feature detection etc.
+- `.aliases` - Aliases for commonly used commands
+- `.functions` - Shell functions
+- `.extra` - User specific extra's that you generally don't want to commit to github
+
+## $PATH
+
+Here’s an example `~/.path` file that adds `/usr/local/bin` to the `$PATH`:
+
+```
+export PATH="/usr/local/bin:$PATH"
+```
+
+## Git Credentials
+
+You can use `~/.extra` to add a few customizations without the need to fork this entire repository, or to add configuration that you don’t want to commit to a public repository.
+
+For example, you can use `~/.extra` to configure your Git credentials, leaving the committed `.gitconfig` free
+of user specific configuration.
+
+```
+# Git credentials
+# Commented out to prevent people from accidentally committing under my name
+#GIT_AUTHOR_NAME="Brian Cowdery"
+#GIT_AUTHOR_EMAIL="brian@thebeardeddeveloper.co"
+#GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
+#GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
+#git config --global user.name "$GIT_AUTHOR_NAME"
+#git config --global user.email "$GIT_AUTHOR_EMAIL"
+```
+
+You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. Although it's probably better to just [fork this repository](https://github.com/bcowdery/dotfiles/fork) instead.
 
 # Iterm2
 
@@ -53,3 +98,12 @@ you to script out the install in your `Brewfile`.
 Set this font in iTerm2 (iTerm → Preferences → Profiles → Text → Change Font).
 
 Restart iTerm2 for all changes to take effect.
+
+# Acknowledgements
+
+Source code and examples were taken from all over the place. Special thanks to:
+
+* [@mathiasbynens](https://github.com/mathiasbynens) (Mathias Bynens)
+  [https://github.com/mathiasbynens/dotfiles](https://github.com/mathiasbynens/dotfiles)
+* [@mbadolato](https://github.com/mbadolato) (Mark Badolato)
+  [iTerm2-Color-Schemes](https://github.com/mbadolato/iTerm2-Color-Schemes)

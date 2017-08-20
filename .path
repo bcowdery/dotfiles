@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# Additional paths
+# export PATH="/usr/local/bin:$PATH"
