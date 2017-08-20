@@ -3,6 +3,9 @@ Dotfiles
 
 My .dotfiles, configurations and unattended software installs for macOS.
 
+![Screenshot](init/screenshot.png)
+
+
 * Installs [RVM](https://rvm.io)
 * Installs [Homebrew](https://brew.sh/)
 * Installs [Homebrew-Cask](https://caskroom.github.io)
