@@ -1,7 +1,8 @@
 #!/bin/bash
 
 function rsync_dotfiles() {
-	rsync --exclude ".git/" \
+	rsync --exclude "bin/" \
+	  --exclude ".git/" \
 		--exclude "setup.sh" \
 		--exclude "Readme.md" \
 		-avh --no-perms --quiet . ~;
@@ -16,7 +17,7 @@ function configure_dotfiles() {
     printf "$green\n" "Ok ✓"
 
   else
-    printf "\n"
+    printf "$yellow\n" "Working •"
     printf "$yellow\n" "This will overwrite existing files in your home directory "
     read -p "Are you sure? (y/n) " yn;
 
