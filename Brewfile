@@ -94,6 +94,7 @@ cask "adium"
 cask "atom"
 cask "cakebrew"
 cask "dash"
+cask "evernote"
 cask "firefox"
 cask "gitkraken"
 cask "google-chrome"
@@ -137,3 +138,4 @@ mas 'Numbers', id: 409203825
 mas 'Pages', id: 409201541
 mas 'Sketch', id: 402476602
 mas "1Password", id: 443987910
+# mas "Textual", id: 1262957439
