@@ -135,8 +135,8 @@ cask 'font-source-serif-pro'
 cask 'font-source-code-pro-for-powerline'
 
 # Appstore apps
-mas 'Numbers', id: 409203825
-mas 'Pages', id: 409201541
-mas 'Sketch', id: 402476602
-mas "1Password", id: 443987910
+#mas 'Numbers', id: 409203825
+#mas 'Pages', id: 409201541
+#mas 'Sketch', id: 402476602
+#mas "1Password", id: 443987910
 # mas "Textual", id: 1262957439

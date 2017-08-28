@@ -11,7 +11,7 @@ function rsync_dotfiles() {
 }
 
 function configure_dotfiles() {
-  printf "Copying dotfiles to home directory..."
+  printf "Copying dotfiles to home directory... "
 
   if [ "$1" == "--force" -o "$1" == "-f" ]; then
   	rsync_dotfiles;
