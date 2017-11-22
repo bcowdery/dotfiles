@@ -90,8 +90,8 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
 # Desktop apps to install via Cask
-cask "adium"
 cask "atom"
+cask "bartender"
 cask "cakebrew"
 cask "dash"
 cask "dropbox"
@@ -105,6 +105,7 @@ cask "handbrake"
 cask "insomnia"
 cask "intellij-idea"
 cask "iterm2"
+cask "istat-menus"
 cask "osxfuse"
 cask "screenhero"
 cask "shuttle"
@@ -121,11 +122,11 @@ cask 'virtualbox-extension-pack'
 cask "vlc"
 
 # Quicklook
-cask 'qlcolorcode'
-cask 'qlmarkdown'
-cask 'quicklook-json'
-cask 'quicklook-csv'
-cask 'qlstephen'
+cask 'qlcolorcode'    # view css colours
+cask 'qlmarkdown'     # view markdown
+cask 'quicklook-json' # view json dumps
+cask 'quicklook-csv'  # view csv
+cask 'qlstephen'      # view plain text 
 
 # Fonts
 cask 'font-inconsolata'
@@ -135,8 +136,8 @@ cask 'font-source-serif-pro'
 cask 'font-source-code-pro-for-powerline'
 
 # Appstore apps
-#mas 'Numbers', id: 409203825
-#mas 'Pages', id: 409201541
+mas 'Numbers', id: 409203825
+mas 'Pages', id: 409201541
 #mas 'Sketch', id: 402476602
 #mas "1Password", id: 443987910
-# mas "Textual", id: 1262957439
+mas "Textual", id: 1262957439
