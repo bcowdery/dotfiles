@@ -12,6 +12,7 @@ cask "xquartz"
 
 # Command line tools and languages
 brew "ack"
+brew "ansible"
 brew "asciinema"
 brew "awk"
 brew "aws-shell"
