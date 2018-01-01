@@ -2,3 +2,5 @@
 
 # Additional paths
 # export PATH="/usr/local/bin:$PATH"
+
+export JAVA_HOME="/Library/Java/Home"
