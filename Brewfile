@@ -10,7 +10,7 @@ tap "homebrew/versions"
 cask "java" unless system "/usr/libexec/java_home --failfast"
 cask "xquartz"
 
-# Command line tools and languages
+# Command line tools, utilities and languages
 brew "ack"
 brew "ansible"
 brew "asciinema"
@@ -90,12 +90,13 @@ brew "zsh-completions"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
-# Desktop apps to install via Cask
+# Apps to install via Cask
 cask "atom"
 cask "bartender"
 cask "cakebrew"
 cask "dash"
 cask "dropbox"
+cask "dotnet-sdk"
 cask "evernote"
 cask "firefox"
 cask "flux"
@@ -112,7 +113,6 @@ cask "osxfuse"
 cask "powershell"
 cask "shuttle"
 cask "slack"
-cask "slate"
 cask "sequel-pro"
 cask "spotify"
 cask "the-unarchiver"
@@ -122,6 +122,7 @@ cask "vagrant"
 cask "vagrant-manager"
 cask "virtualbox"
 cask 'virtualbox-extension-pack'
+cask 'visual-studio-code'
 cask "vlc"
 
 # Quicklook
@@ -142,5 +143,5 @@ cask 'font-source-code-pro-for-powerline'
 mas 'Numbers', id: 409203825
 mas 'Pages', id: 409201541
 #mas 'Sketch', id: 402476602
-#mas "1Password", id: 443987910
+mas "1Password", id: 443987910
 mas "Textual", id: 1262957439

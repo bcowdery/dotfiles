@@ -1,13 +1,23 @@
 #!/bin/bash
 
+NVM_VERSION="0.33.11"
+NVM_DIR="$HOME/.nvm"
+
 function install_nvm() {
   printf "Installing NVM... "
 
   if [ ! -f "$HOME/.nvm/nvm.sh" ]; then
-    curl -sSL https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
-    export NVM_DIR="$HOME/.nvm"
+    curl -sSL https://raw.githubusercontent.com/creationix/nvm/v$(NVM_VERSION)/install.sh | bash
+    export NVM_DIR="$NVM_DIR"
     source "$NVM_DIR/nvm.sh" && \. "$NVM_DIR/nvm.sh"
     source "$NVM_DIR/bash_completion" && \. "$NVM_DIR/bash_completion"
+	else 
+		printf "$yellow\n" "Updating NVM ..."
+		(
+		  cd "$NVM_DIR"
+		  git fetch --tags origin
+  		git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
+		) && \. "$NVM_DIR/nvm.sh"
   fi
 
   if [ ! -f "$NVM_DIR/nvm.sh" ]; then
