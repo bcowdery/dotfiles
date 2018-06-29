@@ -4,15 +4,16 @@ NVM_VERSION="0.33.11"
 NVM_DIR="$HOME/.nvm"
 
 function install_nvm() {
-  printf "Installing NVM... "
-
   if [ ! -f "$HOME/.nvm/nvm.sh" ]; then
+		printf "Installing NVM ..."
+
     curl -sSL https://raw.githubusercontent.com/creationix/nvm/v$(NVM_VERSION)/install.sh | bash
     export NVM_DIR="$NVM_DIR"
     source "$NVM_DIR/nvm.sh" && \. "$NVM_DIR/nvm.sh"
     source "$NVM_DIR/bash_completion" && \. "$NVM_DIR/bash_completion"
 	else 
 		printf "$yellow\n" "Updating NVM ..."
+
 		(
 		  cd "$NVM_DIR"
 		  git fetch --tags origin

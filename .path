@@ -4,3 +4,7 @@
 # export PATH="/usr/local/bin:$PATH"
 
 export JAVA_HOME="/Library/Java/Home"
+
+# Add Visual Studio Code (code)
+export PATH="\$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+

@@ -10,8 +10,6 @@ function configure_zsh() {
   else
     printf "$green\n" "Ok ✓"
   fi;
-
-  source ~/.zshrc;
 }
 
 function install_ohmyzsh() {

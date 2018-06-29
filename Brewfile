@@ -109,6 +109,7 @@ cask "intellij-idea"
 cask "iterm2"
 cask "istat-menus"
 cask "microsoft-azure-storage-explorer"
+cask "ngrok"
 cask "osxfuse"
 cask "powershell"
 cask "shuttle"
@@ -121,7 +122,6 @@ cask "transmission"
 cask "vagrant"
 cask "vagrant-manager"
 cask "virtualbox"
-cask 'virtualbox-extension-pack'
 cask 'visual-studio-code'
 cask "vlc"
 
