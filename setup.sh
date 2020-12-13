@@ -20,7 +20,4 @@ install_ohmyzsh
 configure_zsh
 configure_dotfiles
 
-install_nvm
-install_node
-
 printf "$green\n" "All Done!"
