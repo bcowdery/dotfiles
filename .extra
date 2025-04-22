@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 # Git credentials
 # Commented out to prevent people from accidentally committing under my name

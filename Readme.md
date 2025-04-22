@@ -3,23 +3,18 @@ Dotfiles
 
 My .dotfiles, configurations and unattended software installs for macOS.
 
-![Screenshot](init/screenshot.png)
 
-
-* Installs [RVM](https://rvm.io)
 * Installs [Homebrew](https://brew.sh/)
-* Installs [Homebrew-Cask](https://caskroom.github.io)
 * Installs all software in [Brewfile](Brewfile)
-* Sets ZSH to the shell default
 * Copies dotfiles to the user $HOME
 
 
 # Installation
 
-You can clone the repository wherever you want, although `~/.dotfiles` is preferred. The [setup](setup.sh) script will pull in the latest version, install all the software and copy dotfiles to their new $HOME.
+You can clone the repository wherever you want, although `~/.dotfiles` is preferred. The [bootstrap](bootstrap.sh) script will pull in the latest version, install all the software and copy dotfiles to their new $HOME.
 
 ```
-git clone https://github.com/bcowdery/dotfiles.git ~.dotfiles && ./dotfiles/setup.sh
+git clone https://github.com/bcowdery/dotfiles.git ~.dotfiles && ./dotfiles/bootstrap.sh
 ```
 
 ## Staying up to date

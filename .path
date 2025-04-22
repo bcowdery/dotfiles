@@ -1,13 +1,17 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 # Additional paths
 # export PATH="/usr/local/bin:$PATH"
 
-export JAVA_HOME="/Library/Java/Home"
-
-# Add Visual Studio Code (code)
-export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
-
 # Use GNU coreutils
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
+# Use NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Use Pyenv
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
