@@ -3,35 +3,53 @@ Dotfiles
 
 My .dotfiles, configurations and unattended software installs for macOS.
 
-
 * Installs [Homebrew](https://brew.sh/)
+* Installs [NVM](https://github.com/nvm-sh/nvm) and Node LTS
+* Installs [Pyenv](https://github.com/pyenv/pyenv) and Python3
 * Installs all software in [Brewfile](Brewfile)
 * Copies dotfiles to the user $HOME
-
 
 # Installation
 
 You can clone the repository wherever you want, although `~/.dotfiles` is preferred. The [bootstrap](bootstrap.sh) script will pull in the latest version, install all the software and copy dotfiles to their new $HOME.
 
+```shell
+git clone https://github.com/bcowdery/dotfiles.git ~.dotfiles
 ```
-git clone https://github.com/bcowdery/dotfiles.git ~.dotfiles && ./dotfiles/bootstrap.sh
+
+```shell
+~/.dotfiles/bootstrap.sh install
 ```
 
 ## Staying up to date
 
-You can update your installation at any time by running the setup script again. It will automatically pull the latest sources from git and invoke Homebrew to update software and install new packages from the `Brewfile` formulae.
+You can update your installation at any time by running `bootstrap update`. It will automatically pull the latest sources from git and invoke Homebrew to update software and install new packages from the `Brewfile` formulae.
 
+```shell
+~/.dotfiles/bootstrap.sh update
 ```
-~/.dotfiles/setup.sh
+
+You can also selectivly update either `homebrew`, or your `dotfiles`
+```shell
+~/.dotfiles/bootstrap.sh update homebrew
 ```
+> **🚨 Warning!** Updating `dotfiles` will clobber any changes made to the files
+> in your home directory. Check your `~/.zshrc` file for external changes made by other installers
+> before updating!
+
 
 ## Sensible macOS defaults
 
-When setting up a new Mac, you may want to set up some sensible macOS defaults
+When setting up a new Mac, you may want to set up some sensible macOS defaults.
 
+```shell
+~/.dotfiles/macos.sh
 ```
-./.macos
-```
+> **💡 Note:** Be prepared to type in your `sudo` password, like, *A LOT*. Sudo keep-alive doesn't seem to be working in recent versions of MacOS :(
+
+> 🧠 These settings are my personal Mac devices. I have strong opnions about things like hot corners, Finder hiding files and other things you
+> might not want for your own environment. Read through the [macos.sh](macos.sh) file and comment out anything you don't want.
+
 
 # Extras
 
@@ -42,6 +60,7 @@ If any of these files exist, they will be sourced along with the main `~/.zshrc`
 - `.aliases` - Aliases for commonly used commands
 - `.functions` - Shell functions
 - `.extra` - User specific extra's that you generally don't want to commit to github
+- `.ssh-agent` - Launch ssh-agent to hold private keys for public key authentication
 
 ## Path
 
@@ -58,7 +77,7 @@ You can use `~/.extra` to add a few customizations without the need to fork this
 For example, you can use `~/.extra` to configure your Git credentials, leaving the committed `.gitconfig` free
 of user specific configuration.
 
-```
+```shell
 # Git credentials
 # Commented out to prevent people from accidentally committing under my name
 #GIT_AUTHOR_NAME="Brian Cowdery"
@@ -86,7 +105,7 @@ Just save it somewhere and open the file(s). The color settings will be imported
 
 ## Install a patched font
 
-My Brewfile installs Source Code Pro and a patched variant that plays nice with powerline consoles. Other fonts can
+My Brewfile installs Source Code Pro, Fira Code and a patched variants that plays nice with powerline consoles. Other fonts can
 be installed with the Homebrew-Font's cask or by from the powerline fonts repo. Homebrew is preferred as it will allow
 you to script out the install in your `Brewfile`.
 

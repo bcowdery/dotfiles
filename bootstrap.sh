@@ -11,6 +11,9 @@ red='\e[1;31m%s\e[0m'
 green='\e[1;32m%s\e[0m'
 yellow='\e[1;33m%s\e[0m'
 
+# make sure we're in the script directory
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
 # source all modules in `bin`
 for f in ./bin/*.sh; do source "$f"; done;
 
@@ -79,10 +82,10 @@ function update_command() {
 		update_brewfile
 
 	elif [ "$installer" == "dotfiles" ]; then
-		update_dotfiles
+		update_dotfiles --force
 
 	else
-        echo "Error: Unknown source '$filename'"
+        echo "Error: Unknown source '$installer'"
         return;
     fi
 }
