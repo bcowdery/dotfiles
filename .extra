@@ -1,4 +1,7 @@
-#!/usr/bin/env zsh
+# Purpose: Extras for shell configuration
+#
+# This script is intended to be sourced from your shell's startup file (e.g., .bashrc, .zshrc)
+#
 
 # Git credentials
 # Commented out to prevent people from accidentally committing under my name

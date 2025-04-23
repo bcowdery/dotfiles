@@ -25,29 +25,31 @@ brew "jq"
 brew "gh"
 
 # Node
-# Broken, install from source :(
-#brew "nvm"
+# Note: We use nvm to manage node versions instead of homebrew. Ignore "node" and "npm" dependencies
+brew "zx", args: ['ignore-dependencies']
 
 # Python
 brew "pyenv"
 brew "pyenv-virtualenv"
 brew "python3"
 
-# ZSH Plugins
+# ZSH Plugins and shell
 brew "zsh"
 brew "zsh-completions"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
+brew "starship"
+
 # Apps
+cask "brave-browser"
 cask "iterm2"
+cask "mongodb-compass"
 cask "ngrok"
+cask "notion"
 cask "spotify"
 cask "the-unarchiver"
 cask "visual-studio-code"
-cask "brave-browser"
-cask "notion"
-cask "mongodb-compass"
 
 # Fonts
 cask "font-source-code-pro"

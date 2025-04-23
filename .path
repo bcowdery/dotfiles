@@ -1,4 +1,7 @@
-#!/usr/bin/env zsh
+# Purpose: Export PATH variables for various tools and utilities
+#
+# This script is intended to be sourced from your shell's startup file (e.g., .bashrc, .zshrc)
+#
 
 # Additional paths
 # export PATH="/usr/local/bin:$PATH"
@@ -8,10 +11,13 @@ export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
 # Use NVM
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # Use Pyenv
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+[[ "$(command -v pyenv)" ]] && eval "$(pyenv init - zsh)"
+
+# Use meteor
+export PATH="$HOME/.meteor:$PATH"

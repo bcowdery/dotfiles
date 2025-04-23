@@ -1,4 +1,7 @@
-#!/usr/bin/env zsh
+# Purpose: Export useful shell functions for various tasks
+#
+# This script is intended to be sourced from your shell's startup file (e.g., .bashrc, .zshrc)
+#
 
 # Create a new directory and enter it
 function mkd() {
@@ -17,4 +20,9 @@ function fs() {
 	else
 		du $arg .[^.]* ./*;
 	fi;
+}
+
+# Test if an executable or function exists
+exists() {
+  command -v "$1" >/dev/null 2>&1
 }

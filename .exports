@@ -1,4 +1,7 @@
-#!/usr/bin/env zsh
+# Purpose: Export environment variables and settings for various tools and utilities
+#
+# This script is intended to be sourced from your shell's startup file (e.g., .bashrc, .zshrc)
+#
 
 # Set manpage path
 export MANPATH="/usr/local/man:$MANPATH"
