@@ -6,18 +6,12 @@
 # Additional paths
 # export PATH="/usr/local/bin:$PATH"
 
+# Personal scripts
+export PATH="$HOME/bin:$PATH"
+
 # Use GNU coreutils
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
-# Use NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-
-# Use Pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-[[ "$(command -v pyenv)" ]] && eval "$(pyenv init - zsh)"
-
 # Use meteor
-export PATH="$HOME/.meteor:$PATH"
+export METEOR_DIR="$HOME/.meteor"
+[[ -d $METEOR_DIR ]] && export PATH="$METEOR_DIR:$PATH"

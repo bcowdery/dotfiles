@@ -6,6 +6,8 @@ brew "findutils"
 
 brew "curl"
 brew "grep"
+brew "gpg"
+brew "gwak"
 brew "less"
 brew "tree"
 brew "vim"
@@ -24,15 +26,6 @@ brew "rsync"
 brew "jq"
 brew "gh"
 
-# Node
-# Note: We use nvm to manage node versions instead of homebrew. Ignore "node" and "npm" dependencies
-brew "zx", args: ['ignore-dependencies']
-
-# Python
-brew "pyenv"
-brew "pyenv-virtualenv"
-brew "python3"
-
 # ZSH Plugins and shell
 brew "zsh"
 brew "zsh-completions"
@@ -40,6 +33,10 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
 brew "starship"
+brew "zoxide"
+
+# Language manager
+brew "asdf", postinstall: "asdf plugin add nodejs && asdf plugin add python"
 
 # Apps
 cask "brave-browser"
@@ -47,6 +44,7 @@ cask "iterm2"
 cask "mongodb-compass"
 cask "ngrok"
 cask "notion"
+cask "raycast"
 cask "spotify"
 cask "the-unarchiver"
 cask "visual-studio-code"
@@ -60,3 +58,4 @@ cask "font-fira-code-nerd-font"
 
 # Appstore apps
 mas "1Password", id: 443987910
+mas "NordLayer", id: 1488888843

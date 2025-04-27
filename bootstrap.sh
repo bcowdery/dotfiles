@@ -14,8 +14,8 @@ yellow='\e[1;33m%s\e[0m'
 # make sure we're in the script directory
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-# source all modules in `bin`
-for f in ./bin/*.sh; do source "$f"; done;
+# source all modules in `lib`
+for f in ./lib/*.sh; do source "$f"; done;
 
 # Show help message
 #
@@ -82,7 +82,7 @@ function update_command() {
 		update_brewfile
 
 	elif [ "$installer" == "dotfiles" ]; then
-		update_dotfiles --force
+		update_dotfiles
 
 	else
         echo "Error: Unknown source '$installer'"
@@ -99,8 +99,7 @@ function update_command() {
 function install_command()
 {
 	# run installers
-	install_nvm
-	install_node
+	install_ohmyzsh
 	install_homebrew
 
 	# update dotfiles and homebrew apps

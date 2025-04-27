@@ -4,8 +4,8 @@ Dotfiles
 My .dotfiles, configurations and unattended software installs for macOS.
 
 * Installs [Homebrew](https://brew.sh/)
-* Installs [NVM](https://github.com/nvm-sh/nvm) and Node LTS
-* Installs [Pyenv](https://github.com/pyenv/pyenv) and Python3
+* Installs [Oh My Zsh](https://ohmyz.sh/)
+* Installs [Asdf](https://asdf-vm.com/) runtime version manager
 * Installs all software in [Brewfile](Brewfile)
 * Copies dotfiles to the user $HOME
 
@@ -66,13 +66,19 @@ If any of these files exist, they will be sourced along with the main `~/.zshrc`
 
 Here’s an example `~/.path` file that adds `/usr/local/bin` to the `$PATH`:
 
-```
+```shell
 export PATH="/usr/local/bin:$PATH"
 ```
+
+## Personal Scripts
+
+The `~/bin/` directory contains handy scripts, usually written in a mix of bash, zsh and [zx](https://google.github.io/zx/)
 
 ## Customizations
 
 You can use `~/.extra` to add a few customizations without the need to fork this entire repository, or to add configuration that you don’t want to commit to a public repository.
+
+The `.extra` file is copied once during `install` and then ignored in future updates.
 
 For example, you can use `~/.extra` to configure your Git credentials, leaving the committed `.gitconfig` free
 of user specific configuration.
@@ -89,6 +95,20 @@ of user specific configuration.
 ```
 
 You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. Although it's probably better to just [fork this repository](https://github.com/bcowdery/dotfiles/fork) instead.
+
+# Managing Runtime Versions
+
+I use Asdf to manage runtime versions, such as Node, Python, Ruby, etc. Asdf is installed by the Brewfile, but
+must be configured manuall by adding plugins and installing a runtime version. See the [Asdf documentation](https://asdf-vm.com/guide/getting-started.html) for more information.
+
+**Example NodeJS**
+```shell
+asdf plugin add nodejs
+asdf install nodejs latest
+asdf set --home nodejs latest
+```
+> 🧠 For a complete list of plugins, see the [Asdf Plugins](https://github.com/asdf-vm/asdf-plugins) repository.
+
 
 # Iterm2
 
