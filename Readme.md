@@ -76,9 +76,7 @@ The `~/bin/` directory contains handy scripts, usually written in a mix of bash,
 
 ## Customizations
 
-You can use `~/.extra` to add a few customizations without the need to fork this entire repository, or to add configuration that you don’t want to commit to a public repository.
-
-The `.extra` file is copied once during `install` and then ignored in future updates.
+You can use `~/.extra` to add a few customizations without the need to fork this entire repository, or to add configuration that you don’t want to commit to a public repository. **The `.extra` file is copied once during `install` and then ignored in future updates.**
 
 For example, you can use `~/.extra` to configure your Git credentials, leaving the committed `.gitconfig` free
 of user specific configuration.
@@ -96,19 +94,29 @@ of user specific configuration.
 
 You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. Although it's probably better to just [fork this repository](https://github.com/bcowdery/dotfiles/fork) instead.
 
-# Managing Runtime Versions
+# ASDF
 
-I use Asdf to manage runtime versions, such as Node, Python, Ruby, etc. Asdf is installed by the Brewfile, but
-must be configured manuall by adding plugins and installing a runtime version. See the [Asdf documentation](https://asdf-vm.com/guide/getting-started.html) for more information.
+## Managing Runtime Versions
 
-**Example NodeJS**
+I use [Asdf](https://asdf-vm.com/) to manage runtime versions, such as Node, Python, Ruby, etc. Asdf is installed by the Brewfile, but
+the runtimes themselves must be configured manually by adding plugins and installing selected versison.
+See the [Asdf documentation](https://asdf-vm.com/guide/getting-started.html) for more information.
+
+**Example NodeJS:**
 ```shell
 asdf plugin add nodejs
-asdf install nodejs latest
-asdf set --home nodejs latest
+asdf install nodejs latest:22
+asdf set --home nodejs latest:22
 ```
 > 🧠 For a complete list of plugins, see the [Asdf Plugins](https://github.com/asdf-vm/asdf-plugins) repository.
 
+To pin a specific version to a working directory (e.g., a project or git repo), run `asdf set <plugin> <version>` in the directory.
+
+**Example set tool-version:**
+```shell
+cd my-project
+asdf set nodejs latest:22
+```
 
 # Iterm2
 

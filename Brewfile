@@ -4,10 +4,11 @@
 brew "coreutils"
 brew "findutils"
 
+brew "bash"
 brew "curl"
 brew "grep"
 brew "gpg"
-brew "gwak"
+brew "gawk"
 brew "less"
 brew "tree"
 brew "vim"
@@ -26,6 +27,10 @@ brew "rsync"
 brew "jq"
 brew "gh"
 
+# asdf runtime version manager
+# @see https://asdf-vm.com/guide/getting-started.html
+brew "asdf", postinstall: "${HOMEBREW_PREFIX}/bin/asdf plugin add nodejs && ${HOMEBREW_PREFIX} plugin add python"
+
 # ZSH Plugins and shell
 brew "zsh"
 brew "zsh-completions"
@@ -35,11 +40,9 @@ brew "zsh-syntax-highlighting"
 brew "starship"
 brew "zoxide"
 
-# Language manager
-brew "asdf", postinstall: "asdf plugin add nodejs && asdf plugin add python"
-
 # Apps
 cask "brave-browser"
+cask "discord"
 cask "iterm2"
 cask "mongodb-compass"
 cask "ngrok"
@@ -58,4 +61,3 @@ cask "font-fira-code-nerd-font"
 
 # Appstore apps
 mas "1Password", id: 443987910
-mas "NordLayer", id: 1488888843
