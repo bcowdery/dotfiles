@@ -106,8 +106,11 @@ See the [Asdf documentation](https://asdf-vm.com/guide/getting-started.html) for
 ```shell
 asdf plugin add nodejs
 asdf install nodejs latest:22
-asdf set --home nodejs latest:22
+asdf set --home nodejs latest:22 system
 ```
+
+> 💡 List versions in order of preference, use `system` as a fallback to the globally installed version.
+
 > 🧠 For a complete list of plugins, see the [Asdf Plugins](https://github.com/asdf-vm/asdf-plugins) repository.
 
 To pin a specific version to a working directory (e.g., a project or git repo), run `asdf set <plugin> <version>` in the directory.

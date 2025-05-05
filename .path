@@ -8,10 +8,12 @@
 
 # Personal scripts
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/bin:$PATH"
 
 # Use GNU coreutils
 export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
+
+# Use libpq (PostgreSQL C API)
+export PATH="$HOMEBREW_PREFIX/opt/libpq/bin:$PATH"
 
 # Use meteor
 export METEOR_DIR="$HOME/.meteor"

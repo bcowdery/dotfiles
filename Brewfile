@@ -24,12 +24,18 @@ brew "openssl"
 brew "ssh-copy-id"
 brew "rsync"
 
+brew "libpq"
+
 brew "jq"
 brew "gh"
 
 # asdf runtime version manager
 # @see https://asdf-vm.com/guide/getting-started.html
 brew "asdf", postinstall: "${HOMEBREW_PREFIX}/bin/asdf plugin add nodejs && ${HOMEBREW_PREFIX} plugin add python"
+
+# System runtimes (for asdf fallbacks and other tool dependencies)
+brew "node"
+brew "python3"
 
 # ZSH Plugins and shell
 brew "zsh"
@@ -44,12 +50,16 @@ brew "zoxide"
 cask "brave-browser"
 cask "discord"
 cask "iterm2"
-cask "mongodb-compass"
 cask "ngrok"
 cask "notion"
 cask "raycast"
 cask "spotify"
 cask "the-unarchiver"
+
+cask "mongodb-compass"
+
+cask "datagrip"
+cask "webstorm"
 cask "visual-studio-code"
 
 # Fonts
