@@ -1,5 +1,6 @@
 [push]
-    default = matching
+    default = simple
+    autoSetupRemote = true
 
 [diff "exif"]
     textconv = exiftool
