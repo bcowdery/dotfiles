@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 function rsync_dotfiles() {
+	# sync dotfiles
 	rsync --exclude "init/" \
+		--exclude "bin/" \
 		--exclude "lib/" \
 		--exclude ".extra" \
 		--exclude ".git/" \
@@ -11,6 +13,9 @@ function rsync_dotfiles() {
 		--exclude "macos.sh" \
 		--exclude "Readme.md" \
 		-avh --no-perms --quiet . ~;
+
+	# sync scripts, maintain permissions
+	rsync -avh --quiet bin/ ~/.local/bin;
 }
 
 function update_dotfiles() {

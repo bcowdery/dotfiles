@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function install_ohmyzsh() {
-    printf "Installing Oh My Zsh... "
+    printf "$yellow\n" "Installing Oh My Zsh... "
 
     if [ ! -d ~/.oh-my-zsh ]; then
       sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
