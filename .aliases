@@ -53,3 +53,10 @@ alias path='echo -e ${PATH//:/\\n}'
 # Toggle visibility of hidden files
 alias showFiles="defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app"
 alias hideFiles="defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app"
+
+# Script aliases
+alias tunnel="tunnel.sh"
+alias aws-export-credentials="aws-export-credentials.sh"
+
+#  AWS
+alias awsdev="tunnel start && aws-export-credentials.sh -p dev"
