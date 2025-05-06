@@ -25,14 +25,16 @@ function show_help() {
     echo "Usage: $(basename $0) <command> [options]"
     echo ""
     echo "Available commands:"
-	echo "  install - Install all installers, apps, and copy dotfiles to the home directory."
-    echo "  update  - Update all installed apps, and copy dotfiles to the home directory."
-    echo "  edit    - Edit a file or installer manifest using the \$EDITOR"
-    echo "  help    - Show this help message"
+	echo "  install   - Install all installers, apps, and copy dotfiles to the home directory."
+    echo "  update    - Update all installed apps, and copy dotfiles to the home directory."
+	echo "  configure - Configure defaults for installed tools and language managers."
+    echo "  edit      - Edit a file or installer manifest using the \$EDITOR"
+    echo "  help      - Show this help message"
 	echo ""
 	echo "Options: "
 	echo "  Use 'edit homebrew' to edit the Brewfile."
 	echo "  Use 'update homebrew' or 'update dotfiles' to run a specific installer."
+	echo "  Use 'configure asdf' to set up default language versions."
 }
 
 # Edit a file using the configured EDITOR (default to vim).
@@ -73,26 +75,24 @@ function edit_command() {
 function update_command() {
     local installer="$1"
 
-    # check if the installer is 'homebrew' or 'dotfiles'
 	if [ -z "$installer" ]; then
+		# run all installerss
 		update_brewfile
-		update_dotfiles
-
-	elif [ "$installer" == "homebrew" ]; then
-		update_brewfile
-
-	elif [ "$installer" == "dotfiles" ]; then
 		update_dotfiles
 
 	else
-        echo "Error: Unknown source '$installer'"
-        return;
+		# run only the specified installer
+		case "$installer" in
+			"homebrew") update_brewfile ;;
+			"dotfiles") update_dotfiles ;;
+			*) printf "$red\n" "Unknown installer '$installer'".
+		esac
     fi
 }
 
 # Install all apps, copies dotfiles to the home directory, and configures
-# sensible macOS defaults. Typically this is used to bootstrap a new macOS system,
-# or reset after a major update.
+# the ZSH shell and commandline environment to my liking. Typically used
+# to setup a new MacOS environment.
 #
 # Accepts no arguments.
 #
@@ -107,6 +107,27 @@ function install_command()
 	update_brewfile
 }
 
+# Configures a tool using some out of box defaults
+#
+# param $1 - Name of the tool to configure (e.g., asdf)
+#
+function configure_command()
+{
+	local tool="$1"
+
+	if [ -z "$tool" ]; then
+		# connfigure all tools
+		configure_asdf
+
+	else
+		# configure only the specified tool
+		case "$1" in
+			"asdf") configure_asdf;;
+			*     ) printf "$red\n" "Unknown tool '$tool'";;
+		esac
+	fi
+}
+
 # Run the command
 case "$1" in
 	"install")
@@ -117,6 +138,9 @@ case "$1" in
 		;;
 	"update")
 		update_command "${@:2}"
+		;;
+	"configure")
+		configure_command "${@:2}"
 		;;
 	"help"|"")
 		show_help
