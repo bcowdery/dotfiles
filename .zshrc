@@ -87,11 +87,11 @@ plugins=(
 	brew
 	git
 	gh
+  kubectl
 	#docker
 	#podman
 	macos
 	starship
-	zoxide
 )
 
 # Keybindings

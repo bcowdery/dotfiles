@@ -24,16 +24,19 @@ brew "openssl"
 brew "ssh-copy-id"
 brew "rsync"
 
-brew "libpq"
+brew "libpq" # postgres c-api
 
 brew "jq"
 brew "gh"
 
+brew "go-task"
+
 # asdf runtime version manager
 # @see https://asdf-vm.com/guide/getting-started.html
-brew "asdf", postinstall: "${HOMEBREW_PREFIX}/bin/asdf plugin add nodejs && ${HOMEBREW_PREFIX} plugin add python"
+brew "asdf", postinstall: "${HOMEBREW_PREFIX}/bin/asdf plugin add dotnet && ${HOMEBREW_PREFIX}/bin/asdf plugin add nodejs && ${HOMEBREW_PREFIX}/bin/asdf plugin add python"
 
 # System runtimes (for asdf fallbacks and other tool dependencies)
+cask "dotnet-sdk"
 brew "node"
 brew "python3"
 
@@ -44,7 +47,11 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
 brew "starship"
-brew "zoxide"
+
+# Containerization
+brew "kubernetes-cli"
+cask "docker"
+#cask "podman-desktop"
 
 # Apps
 cask "brave-browser"
@@ -52,6 +59,7 @@ cask "discord"
 cask "iterm2"
 cask "ngrok"
 cask "notion"
+cask "postman"
 cask "raycast"
 cask "spotify"
 cask "the-unarchiver"

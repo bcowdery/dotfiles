@@ -8,6 +8,11 @@ function configure_asdf()
 {
 	printf "$yellow\n" "Configuring ASDF defaults... "
 
+    # Install the latest dotnet SDK
+    asdf plugin add dotnet
+    asdf install dotnet latest:9
+    asdf set --home dotnet latest:9 system
+
 	# Install the latest nodejs v22 LTS
 	asdf plugin add nodejs
 	asdf install nodejs latest:22
