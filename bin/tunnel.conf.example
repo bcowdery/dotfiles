@@ -1,0 +1,12 @@
+# SSH Tunnel Configuration
+# This file contains the configuration for the SSH tunnel script
+
+# SSH connection details
+DESTINATION="userr@192.168.1.1"
+IDENTITY_FILE="~/.ssh/jumpbox.pem"
+CONTROL_SOCKET="~/.ssh/jumpbox.socket"
+
+# Service definitions
+# Format: SERVICE_NAME="local_port:remote_host:remote_port"
+SERVICE_REDSHIFT="5439:my-database.xxx.us-east-1.redshift.amazonaws.com:5439"
+SERVICE_DOCDB="27017:my-docdb.cluster-xxx.us-east-1.docdb.amazonaws.com:27017"
