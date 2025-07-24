@@ -452,7 +452,7 @@ find "${HOME}/Library/Application Support/Dock" -name "*-*.db" -maxdepth 1 -dele
 #defaults write com.apple.dock wvous-bl-modifier -int 0
 
 ###############################################################################
-# Terminal, iTerm 2 & Starship                                                #
+# Terminal                                                                    #
 ###############################################################################
 
 # Only use UTF-8 in Terminal.app
@@ -469,15 +469,6 @@ defaults write com.apple.terminal SecureKeyboardEntry -bool true
 
 # Disable the annoying line marks
 defaults write com.apple.Terminal ShowLineMarks -int 0
-
-# Install the Tomorrow Nite theme for iTerm
-open "${HOME}/.dotfiles/init/Tomorrow Night.itermcolors"
-
-# Don’t display the annoying prompt when quitting iTerm
-defaults write com.googlecode.iterm2 PromptOnQuit -bool false
-
-# Set starship preset
-starship preset nerd-font-symbols -o ~/.config/starship.toml
 
 ###############################################################################
 # Time Machine                                                                #

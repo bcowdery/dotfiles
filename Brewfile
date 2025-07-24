@@ -46,7 +46,7 @@ brew "zsh-completions"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
-brew "starship"
+brew "starship", postinstall: "starship preset nerd-font-symbols -o ~/.config/starship.toml"
 
 # Containerization
 brew "kubernetes-cli"
@@ -56,7 +56,7 @@ cask "docker"
 # Apps
 cask "brave-browser"
 cask "discord"
-cask "iterm2"
+cask "ghostty", postinstall: "mkdir -p ${HOME}/.config/ghostty && ln -s ./config/ghostty/config ${HOME}/.config/ghostty/config"
 cask "ngrok"
 cask "notion"
 cask "postman"
