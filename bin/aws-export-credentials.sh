@@ -50,10 +50,10 @@ help()
     echo "  -d --delete                     Delete shared credentials profile entry"
     echo
     echo "Examples: "
-    echo "  ./$(basename $0) -p dev"
-    echo "  ./$(basename $0) -p dev -c default"
-    echo "  ./$(basename $0) -profile=dev -credentials-file-profile=default --no-login"
-    echo "  ./$(basename $0) --credentials-file-profile=default --delete"
+    echo "  $(basename $0) -p dev"
+    echo "  $(basename $0) -p dev -c default"
+    echo "  $(basename $0) -profile=dev -credentials-file-profile=default --no-login"
+    echo "  $(basename $0) --credentials-file-profile=default --delete"
 }
 
 while getopts hndp:c:-: OPTION; do

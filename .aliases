@@ -57,5 +57,6 @@ alias hideFiles="defaults write com.apple.finder AppleShowAllFiles NO; killall F
 #  AWS
 alias awsup="aws-export-credentials -p dev && tunnel start"
 alias awsdown="aws-export-credentials -p dev --delete && tunnel stop"
+
 alias awsdev="aws-export-credentials -p dev"
-alias awsprod="aws-export-credentials -p prod"
+alias awsprod="aws-export-credentials -p prod-us"

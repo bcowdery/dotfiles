@@ -11,6 +11,9 @@ red='\e[1;31m%s\e[0m'
 green='\e[1;32m%s\e[0m'
 yellow='\e[1;33m%s\e[0m'
 
+# this script name
+SCRIPT_NAME="$(basename "$0")"
+
 # this script can be run from anywhere,
 # Follow the symlink to the directory where the actual script is located
 if [ -L "$0" ]; then
@@ -33,7 +36,7 @@ function show_help() {
     echo ""
     echo "Available commands:"
     echo "  install   - Install all installers, apps, and copy dotfiles to the home directory."
-    echo "  update    - Update all installed apps, and copy dotfiles to the home directory."
+    echo "  update    - Update all installed apps, and copy dotfiles to the home directory and create symlinks for user scripts."
     echo "  configure - Configure defaults for installed tools and language managers."
     echo "  edit      - Edit a file or installer manifest using the \$EDITOR"
     echo "  help      - Show this help message"
@@ -41,6 +44,7 @@ function show_help() {
     echo "Options: "
     echo "  Use 'edit homebrew' to edit the Brewfile."
     echo "  Use 'update homebrew' or 'update dotfiles' to run a specific installer."
+    echo "  Use 'update scripts' to symling scripts to ~/.local/bin."
     echo "  Use 'configure asdf' to set up default language versions."
 }
 
@@ -74,7 +78,7 @@ function edit_command() {
 
 # Update installers, apps, and dotfiles.
 #
-# Accepts an installer as an argument, either 'homebrew', or 'dotfiles'.
+# Accepts an installer as an argument, either 'homebrew', 'dotfiles' or 'scripts'.
 # If no argument is provided, all installers will be updated.
 #
 # @param $1 installer - the installer to update
@@ -86,12 +90,14 @@ function update_command() {
         # run all installerss
         update_brewfile
         update_dotfiles
+        update_scripts
 
     else
         # run only the specified installer
         case "$installer" in
             "homebrew") update_brewfile ;;
             "dotfiles") update_dotfiles ;;
+            "scripts")  update_scripts  ;;
             *) printf "$red\n" "Unknown installer '$installer'".
         esac
     fi
@@ -105,6 +111,9 @@ function update_command() {
 #
 function install_command()
 {
+    # symlink the bootstrap script to ~/.local/bin/bootstrap
+    install_bootstrap_script
+
     # run installers
     install_ohmyzsh
     install_homebrew
@@ -112,6 +121,7 @@ function install_command()
     # update dotfiles and homebrew apps
     update_dotfiles --force
     update_brewfile
+    update_scripts
 }
 
 # Configures a tool using some out of box defaults

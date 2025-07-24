@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Installs Oh My Zsh if it is not already installed.
+# If Oh My Zsh is installed, it will do nothing.
+#
 function install_ohmyzsh() {
     printf "$yellow\n" "Installing Oh My Zsh... "
 
