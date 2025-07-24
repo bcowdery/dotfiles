@@ -23,15 +23,16 @@ git clone https://github.com/bcowdery/dotfiles.git ~.dotfiles
 
 ## Staying up to date
 
-You can update your installation at any time by running `bootstrap update`. It will automatically pull the latest sources from git and invoke Homebrew to update software and install new packages from the `Brewfile` formulae.
+You can update your installation at any time by running `bootstrap update`. It will automatically pull the latest sources from git and invoke Homebrew to update software and install new packages from the `Brewfile` formulae. The
+bootstrap script itself is symlinked to `~/.local/bin` during install. After installation, you should be able to call `bootstrap` from anywhere on your PATH.
 
 ```shell
-~/.dotfiles/bootstrap.sh update
+bootstrap update
 ```
 
-You can also selectivly update either `homebrew`, or your `dotfiles`
+You can also selectivly update either `homebrew`, your `dotfiles` or `scripts`:
 ```shell
-~/.dotfiles/bootstrap.sh update homebrew
+bootstrap update homebrew
 ```
 > **🚨 Warning!** Updating `dotfiles` will clobber any changes made to the files
 > in your home directory. Check your `~/.zshrc` file for external changes made by other installers
@@ -74,9 +75,13 @@ export PATH="/usr/local/bin:$PATH"
 
 The `~/bin/` directory contains handy scripts, usually written in a mix of bash, zsh and [zx](https://google.github.io/zx/)
 
+These scripts are symlinked to the `~/.local/bin` path.
+
+Use the `bootstrap update scripts` command to update symlinks for new scripts.
+
 ## Customizations
 
-You can use `~/.extra` to add a few customizations without the need to fork this entire repository, or to add configuration that you don’t want to commit to a public repository. **The `.extra` file is copied once during `install` and then ignored in future updates.**
+You can use `~/.extra` to add a few customizations without the need to fork this entire repository, or to add configuration that you don’t want to commit to a public repository.
 
 For example, you can use `~/.extra` to configure your Git credentials, leaving the committed `.gitconfig` free
 of user specific configuration.
@@ -92,7 +97,7 @@ of user specific configuration.
 #git config --global user.email "$GIT_AUTHOR_EMAIL"
 ```
 
-You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. Although it's probably better to just [fork this repository](https://github.com/bcowdery/dotfiles/fork) instead.
+> **💡 Note:** The `.extra` file is copied once during **install** and then ignored in future updates.
 
 # ASDF
 
