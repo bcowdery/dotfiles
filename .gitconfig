@@ -5,6 +5,9 @@
     default = simple
     autoSetupRemote = true
 
+[pull]
+    rebase = false
+
 [diff "exif"]
     textconv = exiftool
 
