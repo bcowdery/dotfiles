@@ -9,6 +9,7 @@ function rsync_dotfiles()
         --exclude ".extra" \
         --exclude ".git/" \
         --exclude ".gitignore" \
+        --exclude ".editorconfig" \
         --exclude "bootstrap.sh" \
         --exclude "Brewfile" \
         --exclude "macos.sh" \
