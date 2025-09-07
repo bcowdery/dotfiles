@@ -78,4 +78,4 @@ cask "font-fira-mono"
 cask "font-fira-code-nerd-font"
 
 # Appstore apps
-mas "1Password", id: 443987910
+#mas "1Password", id: 443987910

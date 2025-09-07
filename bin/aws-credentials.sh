@@ -149,7 +149,7 @@ sso_login()
 sso_logout()
 {
     echo
-    echo "🔑 ${bold}SSO logout... "
+    echo "🔑 ${bold}SSO logout...${reset}"
 
     aws sso logout --profile "$sso_profile"
 
@@ -160,7 +160,7 @@ sso_logout()
     fi
 
     echo
-    echo "👋 ${green}Bye bye.${reset}"
+    echo "✅ ${green}You've been logged out. Bye!${reset}"
 }
 
 # Export SSO credentials to the shared credentials file
@@ -184,7 +184,7 @@ export_credentials()
     aws configure set --profile "$credentials_profile" aws_session_token "$AWS_SESSION_TOKEN"
 
     echo
-    echo "✅ ${green}Successfully exported to ${AWS_SHARED_CREDENTIALS_FILE:-~/.aws/credentials} as [${credentials_profile}]${reset}"
+    echo "✅ ${green}Exported to ${AWS_SHARED_CREDENTIALS_FILE:-~/.aws/credentials} as [${credentials_profile}]${reset}"
 }
 
 # Clear access keys from the shared credentials file
@@ -202,7 +202,7 @@ clear_credentials()
     aws configure set --profile "$credentials_profile" aws_session_token ''
 
     echo
-    echo "✅ ${green}Successfully removed [${credentials_profile}] from ${AWS_SHARED_CREDENTIALS_FILE:-~/.aws/credentials}${reset}"
+    echo "✅ ${green}Removed [${credentials_profile}] from ${AWS_SHARED_CREDENTIALS_FILE:-~/.aws/credentials}${reset}"
 }
 
 # Main script execution

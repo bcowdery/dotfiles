@@ -20,30 +20,33 @@ function rsync_dotfiles()
 # Copies dotfiles to the home directory, with an option to force overwrite.
 # Accepts an optional argument to force the copy without confirmation.
 #
-# If the --force or -f option is provided, it will copy the dotfiles without prompting.
+# If the --force or -f option is provided, copy the dotfiles without prompting.
 #
 function update_dotfiles()
 {
-    printf "$yellow\n\n" "Copying dotfiles to home directory... "
+    echo
+    echo "🖥️ ${bold}Copying dotfiles to home directory...${reset}"
 
     if [ "$1" == "--force" -o "$1" == "-f" ]; then
         cp .extra ~/.extra
         rsync_dotfiles
 
     else
-        echo "This will overwrite existing files in your home directory."
-        read -p "Are you sure? (y/n) " yn;
-
-        echo ""
+        echo "${italic}This will overwrite existing files in your home directory.${reset}"
+        read -p "${italic}Are you sure? (y/N) ${reset}" yn;
 
         case $yn in
             [Yy]* )
                 rsync_dotfiles
-            ;;
-            * ) printf "Skiping dotfiles.\n\n"
+                ;;
+            * )
+                echo "${yellow}Skipping dotfiles.${reset}"
+                return
+                ;;
         esac
     fi;
 
-    printf "\n$green\n" "Done ✓"
-    printf "$green\n\n" "Reload your shell or source ~/.zshrc to apply changes."
+    echo
+    echo "✅ ${green}Done.${reset}"
+    echo "👉 ${green}Reload your shell or source ~/.zshrc to apply changes.${reset}"
 }

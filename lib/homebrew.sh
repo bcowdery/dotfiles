@@ -5,18 +5,20 @@
 #
 function install_homebrew()
 {
-    printf  "$yellow\n" "Installing Homebrew... "
+    echo
+    echo "📦 ${bold}Installing Homebrew...${reset}"
 
     if [ ! which brew > /dev/null 2>&1 ]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
 
     if [ ! which brew > /dev/null 2>&1 ]; then
-        printf "$red\n\n" "Failed ✗";
+        echo "${red}${bold} Error: installation failed.${reset}"
         exit;
     fi
 
-    printf "$green\n\n" "Done ✓"
+    echo
+    echo "✅ ${green}Done.${reset}"
 }
 
 # Installs all apps listed in the Brewfile.
@@ -24,11 +26,13 @@ function install_homebrew()
 #
 function update_brewfile()
 {
-    printf "$yellow\n" "Installing all apps listed in Brewfile..."
+    echo
+    echo "📦 ${bold}Installing all apps listed in Brewfile...${reset}"
 
     brew update
     brew bundle
     brew cleanup
 
-    printf "$green\n\n" "Done ✓"
+    echo
+    echo "✅ ${green}Done.${reset}"
 }
