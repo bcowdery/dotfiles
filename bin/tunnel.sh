@@ -25,17 +25,27 @@
 #
 # This will start SSH tunnels for the services defined in tunnel.conf.
 
-# highlighting colours
-red='\e[1;31m%s\e[0m'
-green='\e[1;32m%s\e[0m'
-yellow='\e[1;33m%s\e[0m'
+# Colors
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+purple=$(tput setaf 5)
+cyan=$(tput setaf 6)
+white=$(tput setaf 7)
+reset=$(tput sgr0)
+
+# Formatting
+bold=$(tput bold)
+underline=$(tput smul)
+dim=$(tput dim)
 
 # Load configuration from external file
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_FILE="${SCRIPT_DIR}/tunnel.conf"
 
 if [ ! -f "$CONFIG_FILE" ]; then
-    printf "$red\n" "Configuration file not found: $CONFIG_FILE"
+    echo "${red}${bold}Configuration file not found: $CONFIG_FILE ${reset}"
     exit 1
 fi
 
@@ -45,7 +55,7 @@ source "$CONFIG_FILE"
 # Runtime SSH options from configuration
 destination="$DESTINATION"
 identity_file=$IDENTITY_FILE
-control_socket=$CONTROL_SOCKET #"${CONTROL_SOCKET/#\~/$HOME}"
+control_socket=$CONTROL_SOCKET
 
 # Build services array from configuration
 declare -A services=()
@@ -62,35 +72,32 @@ while IFS= read -r line; do
     fi
 done < "$CONFIG_FILE"
 
-# Show help message
-#
-# Accepts no arguments.
-#
+# Help message
 function help() {
     echo "Usage: $(basename $0) <command> [options]"
-    echo ""
+    echo
     echo "Available commands:"
     echo "  start   - Starts a new SSH tunnel and forwards all declared services."
     echo "  stop    - Stops the SSH tunnel."
     echo "  status  - Checks the status of the SSH tunnel."
-    echo "  list    - List all available service aliases."
+    echo "  list    - List local port forwards for this tunnel."
     echo "  help    - Show this help message"
-    echo ""
+    echo
     echo "Options:"
     echo "    Use 'start [service_name]' to start a tunnel for a specific service."
-    echo ""
+    echo
     echo "Configuration:"
     echo "    Edit $CONFIG_FILE to modify SSH settings and services."
 }
 
-# List all available service aliases
+# List all available local port forwards
 #
 # Accepts no arguments.
 #
-function list_services()
+function list_forwards()
 {
     echo
-    echo "Available services:"
+    echo "${bold}Local Port Forwards:${reset}"
     for key in "${!services[@]}"; do
         echo " • $key → ${services[$key]}"
     done
@@ -106,18 +113,20 @@ function start_tunnel()
 
     # Check if the tunnel is already running
     if [ -S "$control_socket" ]; then
-        printf "\n$yellow\n" "The tunnel is already running!"
-        exit 0
+        echo "${yellow}Tunnel is already running${reset}"
+        exit
     fi
 
     echo
-    echo "Starting SSH tunnel... "
+    echo "✨ ${bold}Starting SSH tunnel...${reset}"
 
     # Build the SSH command
     ssh_cmd=(ssh -M -S $control_socket -i $identity_file -fNT -o ExitOnForwardFailure=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=3)
 
     # Append a port forwarding option for each service in the array, or
     # if a service is specified, only append the port forwarding option for that service.
+    echo "Local Port Forwards:"
+
     if [ -z "$service" ]; then
         for key in "${!services[@]}"; do
             echo " • $key → ${services[$key]}"
@@ -136,9 +145,11 @@ function start_tunnel()
 
     # Check if the tunnel started successfully
     if [ $? -eq 0 ]; then
-        printf "$green\n" "Tunnel started successfully ✓"
+        echo
+        echo "✅ ${green}Tunnel started successfully!${reset}"
     else
-        printf "$red\n" "Failed to start tunnel ✗"
+        echo
+        echo "🚫 ${red}${bold}Failed to start tunnel${reset}"
         exit 1
     fi
 }
@@ -150,19 +161,21 @@ function start_tunnel()
 function stop_tunnel()
 {
     if [ ! -S "$control_socket" ]; then
-        printf "\n$yellow\n" "The tunnel is not running (no socket)"
+        echo "${red}${bold}Error: Tunnel is not running (no socket)${reset}"
         exit 1
     fi
 
     echo
-    echo "Stopping SSH tunnel..."
+    echo "✋ ${bold}Stopping SSH tunnel...${reset}"
 
     ssh -S $control_socket -O "exit" $destination
 
     if [ $? -eq 0 ]; then
-        printf "$green\n" "Stopped ✓"
+        echo
+        echo "✅ ${green}Stopped!${reset}"
     else
-        printf "$red\n" "Tunnel failed to stop ✗"
+        echo
+        echo "🚫 ${red}${bold}Tunnel failed to stop${reset}"
         exit 1
     fi
 }
@@ -174,43 +187,56 @@ function stop_tunnel()
 function check_tunnel()
 {
     if [ ! -S "$control_socket" ]; then
-        printf "\n$yellow\n" "The tunnel is not running (no socket)"
+        echo "${red}${bold}Error: Tunnel is not running (no socket)${reset}"
         exit 1
     fi
 
     echo
-    echo "Checking status of SSH tunnel... "
+    echo "🔍 ${bold}Checking status of SSH tunnel...${reset}"
 
     ssh -S $control_socket -O "check" $destination
 
     if [ $? -eq 0 ]; then
-        printf "$green\n" "Ok ✓"
+        echo
+        echo "✅ ${green}Ok!${reset}"
     else
-        printf "$red\n" "Tunnel is not running ✗"
+        echo
+        echo "🚫 ${red}${bold}Tunnel is not running${reset}"
         exit 1
     fi
 }
 
-# Run the command
-case "$1" in
-    "start")
-        start_tunnel "${@:2}"
-        ;;
-    "stop")
-        stop_tunnel
-        ;;
-    "list")
-        list_services
-        ;;
-    "status")
-        check_tunnel
-        ;;
-    "help"|"")
-        help
-        ;;
-    *)
-        echo "Error: Unknown command '$1'"
-        help
-        exit 1
-        ;;
-esac
+# Main script execution
+main()
+{
+    # Run the command
+    case "$1" in
+        "start")
+            start_tunnel "${@:2}"
+            ;;
+        "stop")
+            stop_tunnel
+            ;;
+        "list")
+            list_forwards
+            ;;
+        "status")
+            check_tunnel
+            ;;
+        "help"|"")
+            help
+            ;;
+        *)
+            echo "${red}${bold}Error: Unknown command '$1'${reset}"
+            help
+            exit 1
+            ;;
+    esac
+}
+
+# Error handling
+trap '"Script interrupted!"; exit 130' INT
+trap '"Script failed on line $LINENO"; exit 1' ERR
+
+# Run the main function
+main "$@"
