@@ -6,6 +6,7 @@ brew "findutils"
 
 brew "bash"
 brew "curl"
+brew "direnv"
 brew "grep"
 brew "gpg"
 brew "gawk"

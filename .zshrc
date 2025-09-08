@@ -87,9 +87,10 @@ plugins=(
 	brew
 	git
 	gh
-  kubectl
+    kubectl
 	#docker
 	#podman
+    direnv
 	macos
 	starship
 )
