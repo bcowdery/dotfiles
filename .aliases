@@ -54,10 +54,11 @@ alias path='echo -e ${PATH//:/\\n}'
 alias showFiles="defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app"
 alias hideFiles="defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app"
 
-#  AWS
-alias awsup="aws-credentials export --sso-login -p dev && tunnel start"
-alias awsdown="aws-credentials clear --sso-logout -p dev; tunnel stop"
+# AWS
+alias awsup="aws-credentials export --sso-login && tunnel start"
+alias awsdown="aws-credentials clear --sso-logout; tunnel stop"
 
-alias awsdev="aws-credentials export --sso-login -p dev"
-alias awsdeploy="aws-credentials export --sso-login -p deploy"
-alias awsprod="aws-credentials export --sso-login -p prod-us"
+# AWS Profiles
+alias awsdev="aws-credentials export --sso-login -p dev; export AWS_PROFILE=dev"
+alias awsdeploy="aws-credentials export --sso-login -p deploy; export AWS_PROFILE=deploy"
+alias awsprod="aws-credentials export --sso-login -p prod-us; export AWS_PROFILE=prod-us"

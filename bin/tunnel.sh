@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-# Starts an SSH tunnel to a jump host, to allow access to AWS Redshift and DocDB databases
-# using a PEM file for authentication. The tunnel is started in the background and can be
-# stopped using the `tunnel.sh stop` command. The status of the tunnel can be checked using
-# the `tunnel.sh status` command.
+# Starts an SSH tunnel to a jump host using a PEM file for authentication. The tunnel is
+# started in the background and can be stopped using the `tunnel.sh stop` command. The status
+# of the tunnel can be checked using the `tunnel.sh status` command.
 #
 # Configuration is loaded from tunnel.conf in the same directory as this script.
 #
@@ -118,7 +117,7 @@ function start_tunnel()
     fi
 
     echo
-    echo "✨ ${bold}Starting SSH tunnel...${reset}"
+    echo "📡 ${bold}Starting SSH tunnel...${reset}"
 
     # Build the SSH command
     ssh_cmd=(ssh -M -S $control_socket -i $identity_file -fNT -o ExitOnForwardFailure=yes -o ServerAliveInterval=10 -o ServerAliveCountMax=3)
@@ -144,14 +143,14 @@ function start_tunnel()
     `${ssh_cmd[@]}`
 
     # Check if the tunnel started successfully
-    if [ $? -eq 0 ]; then
-        echo
-        echo "✅ ${green}Tunnel started successfully!${reset}"
-    else
+    if [ $? -ne 0 ]; then
         echo
         echo "🚫 ${red}${bold}Failed to start tunnel${reset}"
         exit 1
     fi
+
+    echo
+    echo "✅ ${green}Tunnel started successfully!${reset}"
 }
 
 # Stop the tunnel if running
@@ -170,14 +169,14 @@ function stop_tunnel()
 
     ssh -S $control_socket -O "exit" $destination
 
-    if [ $? -eq 0 ]; then
-        echo
-        echo "✅ ${green}Stopped!${reset}"
-    else
+    if [ $? -ne 0 ]; then
         echo
         echo "🚫 ${red}${bold}Tunnel failed to stop${reset}"
         exit 1
     fi
+
+    echo
+    echo "✅ ${green}Stopped!${reset}"
 }
 
 # Check if the tunnel is running.
@@ -196,14 +195,14 @@ function check_tunnel()
 
     ssh -S $control_socket -O "check" $destination
 
-    if [ $? -eq 0 ]; then
-        echo
-        echo "✅ ${green}Ok!${reset}"
-    else
+    if [ $? -ne 0 ]; then
         echo
         echo "🚫 ${red}${bold}Tunnel is not running${reset}"
         exit 1
     fi
+
+    echo
+    echo "✅ ${green}Ok!${reset}"
 }
 
 # Main script execution

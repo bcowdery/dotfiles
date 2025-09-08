@@ -54,15 +54,15 @@ help()
     echo
     echo "Options:"
     echo "  -h                              Show help"
-    echo "  -p --profile                    SSO Profile name (Optional, uses default profile if not set)"
-    echo "  -c --credentials-file-profile   Shared credentials file profile name (Optional, uses default profile if not set)"
+    echo "  -p --profile                    SSO Profile name (Optional, defaults to 'default')"
+    echo "  -c --credentials-file-profile   Shared credentials file profile name (Optional, defaults to the sso profile name)"
     echo "  --sso-login                     Do an SSO login"
     echo "  --sso-logout                    Do an SSO logout"
     echo
     echo "Examples: "
     echo "  $(basename $0) export -p dev"
     echo "  $(basename $0) export -p dev -c default --sso-login"
-    echo "  $(basename $0) export --profile=dev --credentials-file-profile=default --no-login"
+    echo "  $(basename $0) export --profile=dev --credentials-file-profile=default --sso-login"
     echo "  $(basename $0) clear --credentials-file-profile=default"
 }
 
@@ -70,8 +70,8 @@ help()
 command=""
 
 # Command line options
-sso_profile='default'
-credentials_profile='default'
+sso_profile=''
+credentials_profile=''
 login=false
 logout=false
 
@@ -120,6 +120,14 @@ done
 
 shift $((OPTIND-1)) # remove parsed options and args from $@ list
 
+# Set default profiles if not provided
+if [ -z "$sso_profile" ]; then
+    sso_profile="default"
+fi
+
+if [ -z "$credentials_profile" ]; then
+    credentials_profile="$sso_profile"
+fi
 
 # Login using the SSO profile configured in the ~/.aws/config file
 #
@@ -135,7 +143,7 @@ sso_login()
     if [ $? -ne 0 ]; then
         echo
         echo "⚠️ ${red}Login failed ✗${reset}"
-        exit 1;
+        exit 1
     fi
 
     echo
@@ -156,7 +164,7 @@ sso_logout()
     if [ $? -ne 0 ]; then
         echo
         echo "⚠️ ${red}Logout failed ✗${reset}"
-        exit 1;
+        exit 1
     fi
 
     echo
