@@ -83,16 +83,16 @@ setopt HIST_IGNORE_SPACE
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-	asdf
-	brew
-	git
-	gh
+    asdf
+    brew
+    git
+    gh
     kubectl
-	#docker
-	#podman
+    #docker
+    #podman
     direnv
-	macos
-	starship
+    macos
+    starship
 )
 
 # Keybindings
