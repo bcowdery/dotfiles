@@ -16,7 +16,7 @@
 #   tunnel.sh start [service_name]
 #   tunnel.sh stop
 #   tunnel.sh status
-#   tunnel.sh list
+#   tunnel.sh forwards
 #
 # Example:
 #   tunnel.sh start
@@ -76,11 +76,11 @@ function help() {
     echo "Usage: $(basename $0) <command> [options]"
     echo
     echo "Available commands:"
-    echo "  start   - Starts a new SSH tunnel and forwards all declared services."
-    echo "  stop    - Stops the SSH tunnel."
-    echo "  status  - Checks the status of the SSH tunnel."
-    echo "  list    - List local port forwards for this tunnel."
-    echo "  help    - Show this help message"
+    echo "  start    - Starts a new SSH tunnel and forwards all declared services."
+    echo "  stop     - Stops the SSH tunnel."
+    echo "  status   - Checks the status of the SSH tunnel."
+    echo "  forwards - List local port forwards for this tunnel."
+    echo "  help     - Show this help message"
     echo
     echo "Options:"
     echo "    Use 'start [service_name]' to start a tunnel for a specific service."
@@ -216,14 +216,15 @@ main()
         "stop")
             stop_tunnel
             ;;
-        "list")
+        "forwards")
             list_forwards
             ;;
         "status")
             check_tunnel
             ;;
-        "help"|"")
+        "help"|"-h")
             help
+            exit
             ;;
         *)
             echo "${red}${bold}Error: Unknown command '$1'${reset}"

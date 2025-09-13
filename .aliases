@@ -55,8 +55,8 @@ alias showFiles="defaults write com.apple.finder AppleShowAllFiles YES; killall 
 alias hideFiles="defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app"
 
 # AWS
-alias awsup="aws-credentials export --sso-login && tunnel start"
-alias awsdown="aws-credentials clear --sso-logout; tunnel stop"
+alias awsup="aws-credentials export --sso-login -p dev -c dev,default && tunnel start"
+alias awsdown="aws-credentials clear --sso-logout -c dev,default; tunnel stop"
 
 # AWS Profiles
 alias awsdev="aws-credentials export --sso-login -p dev; export AWS_PROFILE=dev"
