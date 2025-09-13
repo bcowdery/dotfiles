@@ -1,6 +1,9 @@
 [init]
     defaultBranch = main
 
+[core]
+    excludesFile = ~/.gitignore_global
+
 [push]
     default = simple
     autoSetupRemote = true
