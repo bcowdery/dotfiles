@@ -2,7 +2,7 @@
 
 
 ASDF_PYTHON_VERSION="latest:3"
-ASDF_NODE_VERSION="latest:22"
+ASDF_NODE_VERSION="latest:24"
 ASDF_DOTNET_VERSION="latest:9"
 
 # Updates ASDF plugins and installs the latest versions of each language.

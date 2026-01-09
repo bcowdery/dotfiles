@@ -47,3 +47,6 @@ alias awsdown="aws-credentials clear --sso-logout -c dev,default; tunnel stop"
 alias awsdev="aws-credentials export --sso-login -p dev; export AWS_PROFILE=dev"
 alias awsdeploy="aws-credentials export --sso-login -p deploy; export AWS_PROFILE=deploy"
 alias awsprod="aws-credentials export --sso-login -p prod-us; export AWS_PROFILE=prod-us"
+
+alias athenadev="aws-credentials export -p dev -c dev,default --sso-login"
+alias athenaprod="aws-credentials export -p prod-us -c prod-us,default --sso-login"

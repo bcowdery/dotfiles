@@ -6,6 +6,7 @@ function rsync_dotfiles()
     rsync --exclude "init/" \
         --exclude "bin/" \
         --exclude "lib/" \
+        --exclude "config/" \
         --exclude ".extra" \
         --exclude ".git/" \
         --exclude ".gitignore" \
