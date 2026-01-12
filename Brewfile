@@ -83,7 +83,6 @@ cask "rider"
 cask "webstorm"
 cask "visual-studio-code"
 
-
 # Fonts
 cask "font-source-code-pro"
 cask "font-source-code-pro-for-powerline"

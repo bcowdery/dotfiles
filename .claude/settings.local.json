@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(acli jira:*)",
+      "Bash(./bootstrap.sh:*)"
+    ]
+  }
+}

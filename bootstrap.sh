@@ -52,6 +52,7 @@ function help() {
     echo "Options: "
     echo "  Use 'update homebrew' or 'update dotfiles' to run a specific installer."
     echo "  Use 'update scripts' to symling scripts to ~/.local/bin."
+    echo "  Use 'update claude' to sync Claude skills to ~/.claude."
     echo "  Use 'configure asdf' to set up default language versions."
     echo "  Use 'edit homebrew' to edit the Brewfile."
 }
@@ -75,6 +76,7 @@ function install()
     update_brewfile
     update_dotfiles --force
     update_scripts --force
+    update_claude --force
 }
 
 # Update installers, apps, and dotfiles.
@@ -94,6 +96,7 @@ function update() {
         update_asdf
         update_dotfiles
         update_scripts
+        update_claude
 
     else
         # run only the specified installer
@@ -103,6 +106,7 @@ function update() {
             "asdf")     update_asdf     ;;
             "dotfiles") update_dotfiles ;;
             "scripts")  update_scripts  ;;
+            "claude")   update_claude   ;;
             *)
                 echo "${red}${bold}Error: Unknown installer '$installer'${reset}"
                 exit 2
