@@ -6,21 +6,35 @@
 # in your $HOME directory will be overwritten if they exist.
 #
 
-# Colors
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-blue=$(tput setaf 4)
-purple=$(tput setaf 5)
-cyan=$(tput setaf 6)
-white=$(tput setaf 7)
-reset=$(tput sgr0)
-
-# Formatting
-bold=$(tput bold)
-italic=$(tput sitm)
-underline=$(tput smul)
-dim=$(tput dim)
+# Colors and formatting
+# Only use tput if we're in an interactive terminal
+if [ -t 1 ] && command -v tput >/dev/null 2>&1; then
+    red=$(tput setaf 1)
+    green=$(tput setaf 2)
+    yellow=$(tput setaf 3)
+    blue=$(tput setaf 4)
+    purple=$(tput setaf 5)
+    cyan=$(tput setaf 6)
+    white=$(tput setaf 7)
+    reset=$(tput sgr0)
+    bold=$(tput bold)
+    italic=$(tput sitm)
+    underline=$(tput smul)
+    dim=$(tput dim)
+else
+    red=""
+    green=""
+    yellow=""
+    blue=""
+    purple=""
+    cyan=""
+    white=""
+    reset=""
+    bold=""
+    italic=""
+    underline=""
+    dim=""
+fi
 
 # this script name
 SCRIPT_NAME="$(basename "$0")"
@@ -99,14 +113,15 @@ function update() {
         update_claude
 
     else
-        # run only the specified installer
+        # run only the specified installer, passing remaining args
+        shift
         case "$installer" in
-            "homebrew") update_brewfile ;;
-            "ohmyzsh")  update_ohmyzsh  ;;
-            "asdf")     update_asdf     ;;
-            "dotfiles") update_dotfiles ;;
-            "scripts")  update_scripts  ;;
-            "claude")   update_claude   ;;
+            "homebrew") update_brewfile "$@" ;;
+            "ohmyzsh")  update_ohmyzsh "$@"  ;;
+            "asdf")     update_asdf "$@"     ;;
+            "dotfiles") update_dotfiles "$@" ;;
+            "scripts")  update_scripts "$@"  ;;
+            "claude")   update_claude "$@"   ;;
             *)
                 echo "${red}${bold}Error: Unknown installer '$installer'${reset}"
                 exit 2

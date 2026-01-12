@@ -1,190 +1,94 @@
 ---
 name: jira-update
-description: Add comments and update JIRA ticket fields using the Atlassian CLI
-tools:
+description: This skill should be used when updating existing JIRA tickets, when adding comments or work notes, when transitioning ticket status, or when the user says "update ticket", "add comment", "move to in progress", etc.
+allowed-tools:
   - Bash
   - AskUserQuestion
 ---
 
 # JIRA Update Skill
 
-You are helping the user update an existing JIRA ticket using the Atlassian CLI (`acli`).
+## Overview
 
-## Your Task
+Update existing JIRA tickets using the Atlassian CLI (`acli`), supporting comments, field updates, and status transitions.
 
-Guide the user through updating a JIRA ticket by adding comments, updating fields, or transitioning status.
+## When to Use
+
+Use this skill when:
+- Adding comments or work notes to a ticket
+- Updating ticket fields (assignee, priority, labels, etc.)
+- Transitioning ticket status (move to In Progress, Done, etc.)
+- Making multiple updates to a single ticket
+
+Do NOT use this skill for:
+- Creating new tickets (use `jira-create` instead)
+- Searching for tickets (use `jira-search` instead)
+- Sprint planning or backlog analysis (use `jira-backlog-summary` instead)
+
+## Quick Reference
+
+```bash
+# Add comment
+acli jira workitem comment create \
+  --key "KEY-123" \
+  --body "Comment text"
+
+# Update fields
+acli jira workitem edit \
+  --key "KEY-123" \
+  --assignee "@me" \
+  --labels "label1,label2"
+
+# Transition status
+acli jira workitem transition \
+  --key "KEY-123" \
+  --status "In Progress"
+```
 
 ## Step-by-Step Process
 
-1. **Get Ticket Key** - Ask for the JIRA ticket key (e.g., "PROJ-123")
-   - Validate format: UPPERCASE-NUMBER pattern
+### 1. Get Ticket Key
 
-2. **Determine Update Type** - Use AskUserQuestion to ask what they want to do:
-   - Add a comment/work note
-   - Update ticket fields (assignee, priority, labels, etc.)
-   - Transition status (move to In Progress, Done, etc.)
-   - Multiple updates at once
+Extract ticket key from user input (e.g., "PROJ-123").
+Validate format: `UPPERCASE-NUMBER` pattern.
 
-3. **Gather Update Information** based on type:
+### 2. Determine Update Type
 
-   **For Comments**:
-   - Comment text (support multi-line input)
-   - Optional: Make comment internal/restricted
-
-   **For Field Updates**:
-   - Which field(s) to update:
-     - Assignee (email or "currentUser()")
-     - Priority (Highest, High, Medium, Low, Lowest)
-     - Labels (add or replace)
-     - Summary (ticket title)
-     - Description
-     - Story points (custom field)
-     - Components
-
-   **For Status Transitions**:
-   - Fetch available transitions for current status
-   - Ask which transition to make
-   - Optional: Add comment with transition
-
-4. **Build acli Command(s)**:
-
-   **Add Comment**:
-   ```bash
-   acli jira workitem comment create \
-     --key "KEY-123" \
-     --body "Work in progress. Implemented authentication module."
-   ```
-
-   **Update Fields**:
-   ```bash
-   acli jira workitem edit \
-     --key "KEY-123" \
-     --assignee "user@example.com" \
-     --labels "backend,security"
-   ```
-
-   **Transition Status**:
-   ```bash
-   acli jira workitem transition \
-     --key "KEY-123" \
-     --status "In Progress"
-   ```
-
-   **Combined Update** (comment + field update):
-   ```bash
-   # First update fields
-   acli jira workitem edit --key "KEY-123" --assignee "@me"
-
-   # Then add comment
-   acli jira workitem comment create --key "KEY-123" --body "Taking ownership of this ticket"
-   ```
-
-5. **Show Preview** - Display the command(s) you'll execute and ask for confirmation
-
-6. **Execute Command(s)** - Run the acli command(s) using the Bash tool
-
-7. **Provide Summary** - Show the user:
-   - What was updated
-   - Link to ticket: `https://your-domain.atlassian.net/browse/KEY-123`
-   - Confirmation of changes
-
-## Example Interaction Flows
-
-### Example 1: Add Work Note
-
-**User**: `/jira-update`
-
-**Assistant**: I'll help you update a JIRA ticket. What's the ticket key? (e.g., PROJ-123)
-
-**User**: PROJ-456
-
-**Assistant**: What would you like to do with PROJ-456?
+Ask what to update:
 - Add a comment/work note
 - Update ticket fields
 - Transition status
+- Multiple updates at once
 
-**User**: Add a comment
+### 3. Gather Update Information
 
-**Assistant**: What comment would you like to add?
+**For Comments:**
+- Comment text (supports multi-line)
 
-**User**: Completed API integration. Ready for testing.
+**For Field Updates:**
+- Assignee (email or "@me")
+- Priority (Highest, High, Medium, Low, Lowest)
+- Labels (comma-separated)
+- Summary (ticket title)
+- Description
 
-**Assistant**: I'll add this comment to PROJ-456:
-```bash
-acli jira workitem comment create \
-  --key "PROJ-456" \
-  --body "Completed API integration. Ready for testing."
-```
+**For Status Transitions:**
+- Target status (e.g., "In Progress", "Done", "Blocked")
+- Optional comment with transition
 
-Proceed?
+### 4. Show Preview and Confirm
 
-*[After confirmation, executes command]*
+Display the command(s) before execution.
 
-**Assistant**: ✓ Comment added successfully to PROJ-456
-- **Link**: https://your-domain.atlassian.net/browse/PROJ-456
+### 5. Execute Command(s)
 
-### Example 2: Update Multiple Fields
+Run the appropriate acli command(s).
 
-**User**: `/jira-update PROJ-789` (can provide ticket key inline)
+### 6. Provide Summary
 
-**Assistant**: What would you like to update on PROJ-789?
+Show confirmation with link to ticket.
 
-**User**: Change assignee to me and set priority to High
-
-**Assistant**: I'll update PROJ-789:
-```bash
-acli jira workitem edit \
-  --key "PROJ-789" \
-  --assignee "@me"
-```
-
-Proceed?
-
-*[After confirmation, executes command]*
-
-**Assistant**: ✓ Ticket updated successfully
-- **Assignee**: Changed to current user
-- **Link**: https://your-domain.atlassian.net/browse/PROJ-789
-
-### Example 3: Transition with Comment
-
-**User**: `/jira-update PROJ-123 move to in progress`
-
-**Assistant**: I'll transition PROJ-123 to "In Progress". Would you like to add a comment?
-
-**User**: Yes - "Starting work on this today"
-
-**Assistant**: I'll transition PROJ-123 and add a comment:
-```bash
-# Transition status
-acli jira workitem transition \
-  --key "PROJ-123" \
-  --status "In Progress"
-
-# Add comment
-acli jira workitem comment create \
-  --key "PROJ-123" \
-  --body "Starting work on this today"
-```
-
-Proceed?
-
-*[After confirmation, executes command]*
-
-**Assistant**: ✓ Ticket transitioned successfully
-- **Status**: In Progress
-- **Comment**: Added
-- **Link**: https://your-domain.atlassian.net/browse/PROJ-123
-
-## Important Notes
-
-- **Validation**: Always validate ticket key format before making API calls
-- **Current Status**: For transitions, optionally fetch current status first to show available transitions
-- **Bulk Updates**: If updating multiple fields, use single `updateIssue` call when possible
-- **Error Handling**: Parse acli errors and provide helpful guidance
-- **Permissions**: User must have edit permission on the ticket
-
-## acli Command Reference
+## Commands Reference
 
 ### Add Comment
 ```bash
@@ -209,31 +113,23 @@ acli jira workitem edit \
   --summary "Updated summary"
 ```
 
-### Transition Issue
+### Transition Status
 ```bash
 acli jira workitem transition \
   --key "KEY-123" \
   --status "In Progress"
 ```
 
-### Transition with Comment (separate commands)
+### Transition with Comment
 ```bash
-# First transition
+# Run sequentially
 acli jira workitem transition \
   --key "KEY-123" \
   --status "Done"
 
-# Then add comment
 acli jira workitem comment create \
   --key "KEY-123" \
   --body "Completed and deployed to production"
-```
-
-### Clear Labels
-```bash
-acli jira workitem edit \
-  --key "KEY-123" \
-  --remove-labels "label1,label2"
 ```
 
 ### Remove Assignee
@@ -243,28 +139,62 @@ acli jira workitem edit \
   --remove-assignee
 ```
 
+### Remove Labels
+```bash
+acli jira workitem edit \
+  --key "KEY-123" \
+  --remove-labels "label1,label2"
+```
+
 ## Field Update Options
 
-Common fields that can be updated:
-- `--assignee "user@email.com"` or `--assignee "@me"` for self-assign
-- `--labels "label1,label2"` (comma-separated, no spaces)
-- `--summary "New ticket title"`
-- `--description "Updated description"` or `--description-file "file.md"`
-- `--type "Story"` (change issue type)
-- `--remove-assignee` (unassign ticket)
-- `--remove-labels "label1,label2"` (remove specific labels)
+| Flag | Description |
+|------|-------------|
+| `--assignee "email"` | Assign to user |
+| `--assignee "@me"` | Self-assign |
+| `--remove-assignee` | Unassign ticket |
+| `--labels "a,b,c"` | Set labels (comma-separated, no spaces) |
+| `--remove-labels "a,b"` | Remove specific labels |
+| `--summary "text"` | Update ticket title |
+| `--description "text"` | Update description |
+| `--description-file "path"` | Update description from file |
+| `--type "Story"` | Change issue type |
+
+## Natural Language Shortcuts
+
+| User Says | Action |
+|-----------|--------|
+| "mark as done" | `--status "Done"` |
+| "move to in progress" | `--status "In Progress"` |
+| "assign to me" | `--assignee "@me"` |
+| "unassign" | `--remove-assignee` |
+| "add comment" | `comment create --body "..."` |
+| "block ticket" | `--status "Blocked"` |
+
+## Common Mistakes
+
+| Mistake | Solution |
+|---------|----------|
+| Spaces in labels | Use comma-separated with no spaces: `"label1,label2"` |
+| Wrong status name | Check available transitions for current status |
+| Missing ticket key | Always validate KEY-123 format before making API calls |
+| Forgetting confirmation | Always preview command before execution |
+| Transition without comment | Offer to add a comment explaining the status change |
 
 ## Troubleshooting
 
 - **"Issue does not exist"**: Verify ticket key is correct and accessible
 - **"Field cannot be set"**: Field may not be editable or user lacks permission
-- **"Transition not found"**: Use `getTransitionList` to see available transitions
-- **"Resolution is required"**: Some transitions require setting resolution field
+- **"Transition not found"**: Status may not be available from current state
+- **"Resolution is required"**: Some transitions (e.g., Done) require resolution field
 - **Permission errors**: User may lack edit permission on this ticket
 
 ## Smart Features
 
-- **Ticket Key Detection**: If user provides ticket key in the message (e.g., "update PROJ-123"), extract it automatically
-- **Natural Language**: Parse user intent from natural language (e.g., "mark PROJ-123 as done" → transition to Done)
-- **Batch Updates**: If user wants to update multiple tickets, loop through them
-- **Status Shortcuts**: Common phrases like "move to in progress", "mark as done" map to transitions
+- **Ticket Key Detection**: Extract ticket key from natural language (e.g., "update PROJ-123")
+- **Batch Updates**: Support updating multiple tickets in sequence
+- **Status Shortcuts**: Map common phrases to transitions:
+  - "start" → In Progress
+  - "done" / "complete" → Done
+  - "block" → Blocked
+  - "review" → In Review

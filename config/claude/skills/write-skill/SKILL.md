@@ -14,7 +14,7 @@ specialized knowledge, workflows, and tools. Think of them as "onboarding guides
 domains or tasks—they transform Claude from a general-purpose agent into a specialized agent
 equipped with procedural knowledge that no model can fully possess.
 
-**Official guidance:** For Anthropic's official skill authoring best practices, see `resources/anthropic-best-practices.md`.
+**Official guidance:** For Anthropic's official skill authoring best practices, see `references/anthropic-best-practices.md`.
 
 **Skills provide:**
 1. Specialized workflows - Multi-step procedures for specific domains

@@ -15,3 +15,6 @@ Thumbs.db
 
 # Homebrew
 Brewfile.lock.json
+
+# Claude
+/.claude/settings.local.json

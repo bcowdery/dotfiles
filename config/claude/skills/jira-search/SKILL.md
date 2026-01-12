@@ -1,126 +1,153 @@
 ---
 name: jira-search
-description: Search JIRA tickets using JQL queries with smart filters and formatting
-tools:
+description: This skill should be used when searching for JIRA tickets using JQL queries, when finding tickets by status, assignee, or other criteria, or when the user says "find tickets", "search JIRA", "my open tickets", etc.
+allowed-tools:
   - Bash
   - AskUserQuestion
 ---
 
 # JIRA Search Skill
 
-You are helping the user search for JIRA tickets using the Atlassian CLI (`acli`) with JQL (JIRA Query Language).
+## Overview
 
-## Your Task
+Search for JIRA tickets using JQL (JIRA Query Language) via the Atlassian CLI (`acli`), supporting both predefined quick filters and custom queries with formatted results.
 
-Execute JIRA searches based on user intent, using either predefined quick filters or custom JQL queries, and format results for readability.
+## When to Use
+
+Use this skill when:
+- Searching for tickets by any criteria (status, assignee, labels, etc.)
+- Using quick filters like "my open tickets", "blocked tickets", "bugs"
+- Building custom JQL queries
+- Listing tickets from a sprint, epic, or project
+
+Do NOT use this skill for:
+- Creating new tickets (use `jira-create` instead)
+- Updating existing tickets (use `jira-update` instead)
+- Sprint planning analysis (use `jira-backlog-summary` instead)
+
+## Quick Reference
+
+### Quick Filters
+
+| Shortcut | JQL |
+|----------|-----|
+| `mine` | `assignee = currentUser() AND status NOT IN (Done, Closed)` |
+| `review` | `assignee = currentUser() AND status IN ("In Review", "Code Review")` |
+| `blocked` | `status = Blocked OR labels = "blocked"` |
+| `urgent` | `priority IN (High, Highest) AND status != Done` |
+| `bugs` | `type = Bug AND status != Done` |
+| `recent` | `updated >= -7d ORDER BY updated DESC` |
+| `unassigned` | `assignee is EMPTY AND status != Done` |
+| `sprint` | `sprint in openSprints()` |
+
+### Basic Command
+
+```bash
+acli jira workitem search \
+  --jql "YOUR JQL QUERY" \
+  --limit 50
+```
 
 ## Step-by-Step Process
 
-1. **Understand User Intent**:
-   - Parse user's request to determine search type
-   - Identify if they want a quick filter or custom search
-   - Extract search parameters (assignee, status, project, labels, etc.)
+### 1. Understand User Intent
 
-2. **Choose Search Approach**:
+Parse the request to determine:
+- Quick filter or custom search?
+- Search parameters: assignee, status, project, labels, etc.
 
-   **Option A: Quick Filters** (common patterns)
-   - My open tickets
-   - My tickets in review
-   - Blocked tickets
-   - High priority bugs
-   - Recent updates
-   - Unassigned tickets
-   - Tickets assigned to specific user
-   - Tickets in specific sprint
+### 2. Build JQL Query
 
-   **Option B: Custom JQL**
-   - User provides explicit JQL query
-   - Or you construct JQL from natural language
+**Natural Language Mapping:**
 
-3. **Build JQL Query**:
+| User Says | JQL |
+|-----------|-----|
+| "my tickets" | `assignee = currentUser()` |
+| "high priority" | `priority IN (High, Highest)` |
+| "bugs" | `type = Bug` |
+| "in review" | `status IN ("In Review", "Code Review")` |
+| "unassigned" | `assignee is EMPTY` |
+| "updated this week" | `updated >= -7d` |
+| "created today" | `created >= startOfDay()` |
+| "overdue" | `duedate < now() AND status != Done` |
 
-   Follow JQL syntax:
-   ```jql
-   project = KEY AND status = "In Progress" AND assignee = currentUser()
-   ```
+**Combine conditions:**
+```jql
+project = KEY AND status = "In Progress" AND assignee = currentUser()
+```
 
-   Common JQL patterns:
-   - `project = KEY`
-   - `status IN ("To Do", "In Progress", "Done")`
-   - `assignee = currentUser()` or `assignee = "user@email.com"`
-   - `priority IN (High, Highest)`
-   - `labels = "label-name"`
-   - `updated >= -7d` (updated in last 7 days)
-   - `created >= -30d` (created in last 30 days)
-   - `text ~ "search phrase"` (text search)
-   - `status = Blocked OR labels = "blocked"`
-   - `sprint = "Sprint Name"`
-   - `"Epic Link" = EPIC-123`
+### 3. Execute Search
 
-4. **Execute Search**:
-   ```bash
-   acli jira workitem search \
-     --jql "YOUR JQL QUERY HERE" \
-     --limit 50
-   ```
+```bash
+acli jira workitem search \
+  --jql "assignee = currentUser() AND status NOT IN (Done, Closed)" \
+  --limit 50
+```
 
-   Add `--json` for programmatic parsing or omit for human-readable table output.
+Add `--json` for programmatic parsing or omit for table output.
 
-5. **Format Results** - Present in clear, scannable format:
+### 4. Format Results
 
-   **Compact Format** (for 5+ results):
-   ```
-   Found 12 tickets matching your search:
+**Compact format** (5+ results):
+```
+Found 12 tickets:
 
-   PROJ-101  [Story] [High] Implement JWT authentication
-             Assignee: user@example.com | Status: In Progress
-             https://your-domain.atlassian.net/browse/PROJ-101
+PROJ-101  [Story] [High] Implement JWT authentication
+          Assignee: user@example.com | Status: In Progress
 
-   PROJ-102  [Bug] [Highest] Login page crashes on mobile
-             Assignee: Unassigned | Status: To Do
-             https://your-domain.atlassian.net/browse/PROJ-102
+PROJ-102  [Bug] [Highest] Login page crashes on mobile
+          Assignee: Unassigned | Status: To Do
+```
 
-   [... continue for all results ...]
-   ```
+**Detailed format** (1-4 results):
+```
+PROJ-101: Implement JWT authentication
+Type: Story | Priority: High | Status: In Progress
+Assignee: user@example.com
+Labels: authentication, backend
+Description: Implement JWT-based authentication...
+Link: https://your-domain.atlassian.net/browse/PROJ-101
+```
 
-   **Detailed Format** (for 1-4 results):
-   ```
-   Found 2 tickets:
+### 5. Provide Summary
 
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   PROJ-101: Implement JWT authentication
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   Type: Story | Priority: High | Status: In Progress
-   Assignee: user@example.com
-   Labels: authentication, backend, security
-   Story Points: 8
+- Total count and breakdown by status/priority if relevant
+- Suggest refinements if too many (50+) or no results
 
-   Description:
-   Implement JWT-based authentication for the REST API...
+## JQL Syntax Reference
 
-   Link: https://your-domain.atlassian.net/browse/PROJ-101
-   ```
+### Operators
+- Comparison: `=`, `!=`, `>`, `>=`, `<`, `<=`
+- Lists: `IN (val1, val2)`, `NOT IN (val1, val2)`
+- Text: `~ "search phrase"`
+- Empty: `IS EMPTY`, `IS NOT EMPTY`
 
-6. **Provide Summary**:
-   - Total count of results
-   - Breakdown by status, priority, or type if relevant
-   - Suggest refinements if too many/few results
+### Logical
+- `AND`, `OR`, `NOT`
 
-## Quick Filter Examples
+### Functions
+- `currentUser()` - Logged in user
+- `now()` - Current time
+- `startOfDay()`, `endOfDay()`
+- `startOfWeek()`, `endOfWeek()`
+- `openSprints()` - Active sprints
+
+### Date Ranges
+- `-7d` (7 days ago)
+- `-2w` (2 weeks ago)
+- `-1M` (1 month ago)
+
+### Sorting
+```jql
+ORDER BY priority DESC, created DESC
+ORDER BY rank ASC  -- backlog order
+```
+
+## Common JQL Patterns
 
 ### My Open Tickets
 ```jql
 assignee = currentUser() AND status NOT IN (Done, Closed, Resolved)
-```
-
-### My Tickets In Review
-```jql
-assignee = currentUser() AND status IN ("In Review", "Code Review", "PR Review")
-```
-
-### Blocked Tickets
-```jql
-status = Blocked OR labels = "blocked"
 ```
 
 ### High Priority Bugs
@@ -128,105 +155,40 @@ status = Blocked OR labels = "blocked"
 type = Bug AND priority IN (High, Highest) AND status != Done
 ```
 
-### Recently Updated (Last 7 Days)
-```jql
-updated >= -7d ORDER BY updated DESC
-```
-
-### Unassigned in Project
-```jql
-project = KEY AND assignee is EMPTY AND status != Done
-```
-
 ### Current Sprint
 ```jql
 sprint in openSprints() AND project = KEY
 ```
 
-### Tickets Assigned to Someone Else
+### Recently Updated
 ```jql
-assignee = "user@email.com" AND status != Done
+updated >= -7d ORDER BY updated DESC
 ```
 
-## Example Interactions
+### Text Search
+```jql
+text ~ "authentication" AND project = KEY
+```
 
-### Example 1: Quick Filter
+### Tickets by Epic
+```jql
+"Epic Link" = EPIC-123 ORDER BY rank ASC
+```
 
-**User**: `/jira-search my open tickets`
+## Command Variations
 
-**Assistant**: Searching for your open tickets...
-
-*[Executes: `assignee = currentUser() AND status NOT IN (Done, Closed, Resolved)`]*
-
-**Assistant**: Found 7 open tickets assigned to you:
-
-[Formatted results...]
-
-### Example 2: Custom Search
-
-**User**: `/jira-search high priority bugs in PLAT project`
-
-**Assistant**: Searching for high priority bugs in PLAT...
-
-*[Executes: `project = PLAT AND type = Bug AND priority IN (High, Highest) AND status != Done`]*
-
-**Assistant**: Found 3 high priority bugs:
-
-[Formatted results...]
-
-### Example 3: Natural Language to JQL
-
-**User**: `/jira-search tickets updated in the last week that are blocked`
-
-**Assistant**: Searching for blocked tickets updated recently...
-
-*[Executes: `updated >= -7d AND (status = Blocked OR labels = "blocked") ORDER BY updated DESC`]*
-
-**Assistant**: Found 2 blocked tickets updated in the last 7 days:
-
-[Formatted results...]
-
-### Example 4: Explicit JQL
-
-**User**: `/jira-search --jql "project = PLAT AND sprint = 'Sprint 42'"`
-
-**Assistant**: Executing custom JQL search...
-
-*[Executes provided JQL]*
-
-**Assistant**: Found 15 tickets in Sprint 42:
-
-[Formatted results...]
-
-## Important Notes
-
-- **JQL Validation**: Basic validation of JQL syntax before execution
-- **Result Limits**: Default to 50 results, adjust if user wants more
-- **Empty Results**: If no results found, suggest query refinements
-- **Too Many Results**: If 50+ results, suggest adding filters
-- **Natural Language**: Parse user intent and construct appropriate JQL
-- **Quick Access**: Recognize common phrases and map to predefined queries
-
-## acli Command Reference
-
-### Basic Search
+### With Specific Fields (JSON)
 ```bash
 acli jira workitem search \
-  --jql "project = KEY AND status = 'In Progress'" \
-  --limit 50
+  --jql "project = KEY" \
+  --fields "key,summary,status,assignee" \
+  --json
 ```
 
 ### With Sorting
 ```bash
 acli jira workitem search \
   --jql "assignee = currentUser() ORDER BY priority DESC, created DESC" \
-  --limit 50
-```
-
-### Text Search
-```bash
-acli jira workitem search \
-  --jql "text ~ 'authentication' AND project = KEY" \
   --limit 50
 ```
 
@@ -237,133 +199,20 @@ acli jira workitem search \
   --limit 50
 ```
 
-### With Specific Fields (JSON output)
-```bash
-acli jira workitem search \
-  --jql "project = KEY" \
-  --fields "key,summary,description,status,assignee" \
-  --json
-```
+## Common Mistakes
 
-### Using Saved Filter
-```bash
-acli jira workitem search \
-  --filter 10001 \
-  --limit 50
-```
-
-## Natural Language Mapping
-
-Map common user phrases to JQL:
-
-| User Says | JQL Translation |
-|-----------|----------------|
-| "my tickets" | `assignee = currentUser()` |
-| "my open tickets" | `assignee = currentUser() AND status NOT IN (Done, Closed)` |
-| "blocked tickets" | `status = Blocked OR labels = "blocked"` |
-| "high priority" | `priority IN (High, Highest)` |
-| "bugs" | `type = Bug` |
-| "in review" | `status IN ("In Review", "Code Review", "PR Review")` |
-| "unassigned" | `assignee is EMPTY` |
-| "updated this week" | `updated >= -7d` |
-| "created today" | `created >= startOfDay()` |
-| "overdue" | `duedate < now() AND status != Done` |
-
-## Predefined Quick Searches
-
-Offer these as shortcuts:
-
-1. **mine** - My open tickets
-2. **review** - My tickets in review
-3. **blocked** - All blocked tickets
-4. **urgent** - High priority items
-5. **recent** - Updated in last 7 days
-6. **unassigned** - Unassigned tickets in my projects
-7. **sprint** - Current sprint tickets
-8. **bugs** - Open bugs
-
-Usage: `/jira-search mine` or `/jira-search blocked`
-
-## Output Formatting Tips
-
-### For Many Results (10+)
-- Use compact format
-- Show key info only (key, type, priority, summary)
-- Group by status or priority if helpful
-- Provide summary statistics
-
-### For Few Results (1-9)
-- Use detailed format
-- Show descriptions (truncated if long)
-- Include all relevant fields
-- Make it easy to pick which ticket to work on
-
-### For Empty Results
-- Confirm the query that was executed
-- Suggest modifications:
-  - Widen status filter
-  - Remove date constraints
-  - Check project key
-  - Verify assignee
-
-## Advanced Features
-
-### Search History
-Track recent searches (optional):
-- Store last 5 JQL queries
-- Allow quick re-run: `/jira-search --last`
-
-### Saved Searches
-Allow naming and saving frequent searches:
-- Save: `/jira-search --save "my-filter" "assignee = currentUser() AND ..."`
-- Use: `/jira-search --saved "my-filter"`
-
-### Export Results
-Offer to export to formats:
-- Markdown table
-- CSV
-- JSON
-
-### Interactive Refinement
-If too many results:
-- Suggest adding filters
-- Ask which refinement to add (status, priority, date range)
+| Mistake | Solution |
+|---------|----------|
+| No result limit | Always include `--limit` to avoid huge result sets |
+| Wrong status names | Check project's actual status values (might be "Open" not "To Do") |
+| Forgetting quotes | Multi-word status values need quotes: `status = "In Progress"` |
+| Case sensitivity | Field values are case-sensitive in some instances |
+| Empty results confusion | Suggest widening filters or checking project key |
 
 ## Troubleshooting
 
-- **JQL syntax errors**: Parse acli error and suggest correction
-- **Unknown fields**: Suggest correct field names
-- **Invalid values**: List valid values for enums (status, priority)
-- **Permission errors**: Explain user may not have access to certain projects
-- **Too many results**: Auto-truncate and suggest filters
-
-## JQL Syntax Quick Reference
-
-**Operators**:
-- `=`, `!=`, `>`, `>=`, `<`, `<=`
-- `IN (val1, val2)`
-- `NOT IN (val1, val2)`
-- `~ "text search"`
-- `IS EMPTY`, `IS NOT EMPTY`
-
-**Logical**:
-- `AND`
-- `OR`
-- `NOT`
-
-**Functions**:
-- `currentUser()`
-- `now()`
-- `startOfDay()`, `endOfDay()`
-- `startOfWeek()`, `endOfWeek()`
-- `openSprints()`
-
-**Date Ranges**:
-- `-7d` (7 days ago)
-- `-2w` (2 weeks ago)
-- `-1M` (1 month ago)
-
-**Sorting**:
-- `ORDER BY priority DESC`
-- `ORDER BY created ASC`
-- `ORDER BY rank ASC` (backlog order)
+- **JQL syntax errors**: Check operator usage, quotes, field names
+- **Unknown fields**: Use standard field names or check custom field IDs
+- **Invalid values**: Status, priority values vary by project configuration
+- **Permission errors**: User may not have access to some projects
+- **Too many results**: Add filters or reduce limit
