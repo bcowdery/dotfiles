@@ -1,26 +1,35 @@
-#!/usr/bin/env python3
-"""
-Skill Initializer - Creates a new skill from template
+#!/usr/bin/env bash
+#
+# Skill Initializer - Creates a new skill from template
+#
+# Usage:
+#     init_skill.sh <skill-name> --path <path>
+#
+# Examples:
+#     init_skill.sh my-new-skill --path skills/public
+#     init_skill.sh my-api-helper --path skills/private
+#     init_skill.sh custom-skill --path /custom/location
+#
 
-Usage:
-    init_skill.py <skill-name> --path <path>
+set -euo pipefail
 
-Examples:
-    init_skill.py my-new-skill --path skills/public
-    init_skill.py my-api-helper --path skills/private
-    init_skill.py custom-skill --path /custom/location
-"""
+# Convert hyphenated skill name to Title Case
+title_case_skill_name() {
+    echo "$1" | tr '-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2))}1'
+}
 
-import sys
-from pathlib import Path
+# Generate SKILL.md content
+generate_skill_template() {
+    local skill_name="$1"
+    local skill_title="$2"
 
-
-SKILL_TEMPLATE = """---
-name: {skill_name}
+    cat <<EOF
+---
+name: ${skill_name}
 description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
 ---
 
-# {skill_title}
+# ${skill_title}
 
 ## Overview
 
@@ -70,8 +79,8 @@ This skill includes example resource directories that demonstrate how to organiz
 Executable code (Python/Bash/etc.) that can be run directly to perform specific operations.
 
 **Examples from other skills:**
-- PDF skill: `fill_fillable_fields.py`, `extract_form_field_info.py` - utilities for PDF manipulation
-- DOCX skill: `document.py`, `utilities.py` - Python modules for document processing
+- PDF skill: \`fill_fillable_fields.py\`, \`extract_form_field_info.py\` - utilities for PDF manipulation
+- DOCX skill: \`document.py\`, \`utilities.py\` - Python modules for document processing
 
 **Appropriate for:** Python scripts, shell scripts, or any executable code that performs automation, data processing, or specific operations.
 
@@ -81,7 +90,7 @@ Executable code (Python/Bash/etc.) that can be run directly to perform specific 
 Documentation and reference material intended to be loaded into context to inform Claude's process and thinking.
 
 **Examples from other skills:**
-- Product management: `communication.md`, `context_building.md` - detailed workflow guides
+- Product management: \`communication.md\`, \`context_building.md\` - detailed workflow guides
 - BigQuery: API reference documentation and query examples
 - Finance: Schema documentation, company policies
 
@@ -100,11 +109,17 @@ Files not intended to be loaded into context, but rather used within the output 
 ---
 
 **Any unneeded directories can be deleted.** Not every skill requires all three types of resources.
-"""
+EOF
+}
 
-EXAMPLE_SCRIPT = '''#!/usr/bin/env python3
+# Generate example script content
+generate_example_script() {
+    local skill_name="$1"
+
+    cat <<EOF
+#!/usr/bin/env python3
 """
-Example helper script for {skill_name}
+Example helper script for ${skill_name}
 
 This is a placeholder script that can be executed directly.
 Replace with actual implementation or delete if not needed.
@@ -115,15 +130,21 @@ Example real scripts from other skills:
 """
 
 def main():
-    print("This is an example script for {skill_name}")
+    print("This is an example script for ${skill_name}")
     # TODO: Add actual script logic here
     # This could be data processing, file conversion, API calls, etc.
 
 if __name__ == "__main__":
     main()
-'''
+EOF
+}
 
-EXAMPLE_REFERENCE = """# Reference Documentation for {skill_title}
+# Generate example reference content
+generate_example_reference() {
+    local skill_title="$1"
+
+    cat <<'REFERENCE_EOF'
+# Reference Documentation for SKILL_TITLE_PLACEHOLDER
 
 This is a placeholder for detailed reference documentation.
 Replace with actual reference content or delete if not needed.
@@ -157,9 +178,13 @@ Reference docs are ideal for:
 - Common patterns
 - Troubleshooting
 - Best practices
-"""
+REFERENCE_EOF
+}
 
-EXAMPLE_ASSET = """# Example Asset File
+# Generate example asset content
+generate_example_asset() {
+    cat <<'EOF'
+# Example Asset File
 
 This placeholder represents where asset files would be stored.
 Replace with actual asset files (templates, images, fonts, etc.) or delete if not needed.
@@ -183,121 +208,116 @@ Example asset files from other skills:
 - Data files: .csv, .json, .xml, .yaml
 
 Note: This is a text placeholder. Actual assets can be any file type.
-"""
+EOF
+}
 
+# Show usage information
+usage() {
+    cat <<EOF
+Usage: init_skill.sh <skill-name> --path <path>
 
-def title_case_skill_name(skill_name):
-    """Convert hyphenated skill name to Title Case for display."""
-    return ' '.join(word.capitalize() for word in skill_name.split('-'))
+Skill name requirements:
+  - Hyphen-case identifier (e.g., 'data-analyzer')
+  - Lowercase letters, digits, and hyphens only
+  - Max 40 characters
+  - Must match directory name exactly
 
+Examples:
+  init_skill.sh my-new-skill --path skills/public
+  init_skill.sh my-api-helper --path skills/private
+  init_skill.sh custom-skill --path /custom/location
+EOF
+    exit 1
+}
 
-def init_skill(skill_name, path):
-    """
-    Initialize a new skill directory with template SKILL.md.
+# Initialize a new skill
+init_skill() {
+    local skill_name="$1"
+    local path="$2"
 
-    Args:
-        skill_name: Name of the skill
-        path: Path where the skill directory should be created
-
-    Returns:
-        Path to created skill directory, or None if error
-    """
-    # Determine skill directory path
-    skill_dir = Path(path).resolve() / skill_name
+    # Resolve full path
+    local skill_dir
+    skill_dir="$(cd "$path" 2>/dev/null && pwd)/${skill_name}" || skill_dir="${path}/${skill_name}"
 
     # Check if directory already exists
-    if skill_dir.exists():
-        print(f"❌ Error: Skill directory already exists: {skill_dir}")
-        return None
+    if [[ -e "$skill_dir" ]]; then
+        echo "❌ Error: Skill directory already exists: ${skill_dir}"
+        return 1
+    fi
 
     # Create skill directory
-    try:
-        skill_dir.mkdir(parents=True, exist_ok=False)
-        print(f"✅ Created skill directory: {skill_dir}")
-    except Exception as e:
-        print(f"❌ Error creating directory: {e}")
-        return None
+    if ! mkdir -p "$skill_dir"; then
+        echo "❌ Error creating directory: ${skill_dir}"
+        return 1
+    fi
+    echo "✅ Created skill directory: ${skill_dir}"
+
+    # Generate title case name
+    local skill_title
+    skill_title="$(title_case_skill_name "$skill_name")"
 
     # Create SKILL.md from template
-    skill_title = title_case_skill_name(skill_name)
-    skill_content = SKILL_TEMPLATE.format(
-        skill_name=skill_name,
-        skill_title=skill_title
-    )
+    if ! generate_skill_template "$skill_name" "$skill_title" > "${skill_dir}/SKILL.md"; then
+        echo "❌ Error creating SKILL.md"
+        return 1
+    fi
+    echo "✅ Created SKILL.md"
 
-    skill_md_path = skill_dir / 'SKILL.md'
-    try:
-        skill_md_path.write_text(skill_content)
-        print("✅ Created SKILL.md")
-    except Exception as e:
-        print(f"❌ Error creating SKILL.md: {e}")
-        return None
+    # Create scripts/ directory with example script
+    mkdir -p "${skill_dir}/scripts"
+    if ! generate_example_script "$skill_name" > "${skill_dir}/scripts/example.py"; then
+        echo "❌ Error creating scripts/example.py"
+        return 1
+    fi
+    chmod 755 "${skill_dir}/scripts/example.py"
+    echo "✅ Created scripts/example.py"
 
-    # Create resource directories with example files
-    try:
-        # Create scripts/ directory with example script
-        scripts_dir = skill_dir / 'scripts'
-        scripts_dir.mkdir(exist_ok=True)
-        example_script = scripts_dir / 'example.py'
-        example_script.write_text(EXAMPLE_SCRIPT.format(skill_name=skill_name))
-        example_script.chmod(0o755)
-        print("✅ Created scripts/example.py")
+    # Create references/ directory with example reference doc
+    mkdir -p "${skill_dir}/references"
+    if ! generate_example_reference "$skill_title" | sed "s/SKILL_TITLE_PLACEHOLDER/${skill_title}/g" > "${skill_dir}/references/api_reference.md"; then
+        echo "❌ Error creating references/api_reference.md"
+        return 1
+    fi
+    echo "✅ Created references/api_reference.md"
 
-        # Create references/ directory with example reference doc
-        references_dir = skill_dir / 'references'
-        references_dir.mkdir(exist_ok=True)
-        example_reference = references_dir / 'api_reference.md'
-        example_reference.write_text(EXAMPLE_REFERENCE.format(skill_title=skill_title))
-        print("✅ Created references/api_reference.md")
-
-        # Create assets/ directory with example asset placeholder
-        assets_dir = skill_dir / 'assets'
-        assets_dir.mkdir(exist_ok=True)
-        example_asset = assets_dir / 'example_asset.txt'
-        example_asset.write_text(EXAMPLE_ASSET)
-        print("✅ Created assets/example_asset.txt")
-    except Exception as e:
-        print(f"❌ Error creating resource directories: {e}")
-        return None
+    # Create assets/ directory with example asset placeholder
+    mkdir -p "${skill_dir}/assets"
+    if ! generate_example_asset > "${skill_dir}/assets/example_asset.txt"; then
+        echo "❌ Error creating assets/example_asset.txt"
+        return 1
+    fi
+    echo "✅ Created assets/example_asset.txt"
 
     # Print next steps
-    print(f"\n✅ Skill '{skill_name}' initialized successfully at {skill_dir}")
-    print("\nNext steps:")
-    print("1. Edit SKILL.md to complete the TODO items and update the description")
-    print("2. Customize or delete the example files in scripts/, references/, and assets/")
-    print("3. Run the validator when ready to check the skill structure")
+    echo ""
+    echo "✅ Skill '${skill_name}' initialized successfully at ${skill_dir}"
+    echo ""
+    echo "Next steps:"
+    echo "1. Edit SKILL.md to complete the TODO items and update the description"
+    echo "2. Customize or delete the example files in scripts/, references/, and assets/"
+    echo "3. Run the validator when ready to check the skill structure"
 
-    return skill_dir
+    return 0
+}
 
+# Main entry point
+main() {
+    if [[ $# -lt 3 ]] || [[ "$2" != "--path" ]]; then
+        usage
+    fi
 
-def main():
-    if len(sys.argv) < 4 or sys.argv[2] != '--path':
-        print("Usage: init_skill.py <skill-name> --path <path>")
-        print("\nSkill name requirements:")
-        print("  - Hyphen-case identifier (e.g., 'data-analyzer')")
-        print("  - Lowercase letters, digits, and hyphens only")
-        print("  - Max 40 characters")
-        print("  - Must match directory name exactly")
-        print("\nExamples:")
-        print("  init_skill.py my-new-skill --path skills/public")
-        print("  init_skill.py my-api-helper --path skills/private")
-        print("  init_skill.py custom-skill --path /custom/location")
-        sys.exit(1)
+    local skill_name="$1"
+    local path="$3"
 
-    skill_name = sys.argv[1]
-    path = sys.argv[3]
+    echo "🚀 Initializing skill: ${skill_name}"
+    echo "   Location: ${path}"
+    echo ""
 
-    print(f"🚀 Initializing skill: {skill_name}")
-    print(f"   Location: {path}")
-    print()
+    if init_skill "$skill_name" "$path"; then
+        exit 0
+    else
+        exit 1
+    fi
+}
 
-    result = init_skill(skill_name, path)
-
-    if result:
-        sys.exit(0)
-    else:
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()
+main "$@"
