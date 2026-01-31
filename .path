@@ -14,7 +14,3 @@ export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
 
 # Use libpq (PostgreSQL C API)
 export PATH="$HOMEBREW_PREFIX/opt/libpq/bin:$PATH"
-
-# Use meteor
-export METEOR_DIR="$HOME/.meteor"
-[[ -d $METEOR_DIR ]] && export PATH="$METEOR_DIR:$PATH"
