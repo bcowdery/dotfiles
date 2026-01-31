@@ -31,7 +31,11 @@ copy-on-select                 = true
 macos-auto-secure-input        = true
 macos-secure-input-indication  = true
 quit-after-last-window-closed  = true
-scrollback-limit               = 200000
+
+# Scrollback in bytes (~100k lines at ~100 bytes/line)
+scrollback-limit               = 10000000
+
+# Shell integration
 shell-integration              = zsh
 shell-integration-features     = cursor,sudo,title
 
