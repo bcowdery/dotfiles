@@ -95,7 +95,6 @@ function update() {
         update_asdf
         update_dotfiles
         update_scripts
-        brewfile_orphans
 
     else
         # run only the specified installer
