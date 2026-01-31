@@ -7,6 +7,7 @@ tap "atlassian/homebrew-acli"
 brew "coreutils"
 brew "findutils"
 
+brew "ast-grep"
 brew "git"
 brew "git-filter-repo"
 brew "bash"
@@ -33,6 +34,7 @@ brew "libpq" # postgres c-api
 
 brew "jq"
 brew "gh"
+brew "zoxide"
 
 brew "go-task"
 
@@ -63,8 +65,6 @@ brew "terraform"
 brew "terragrunt"
 
 # Apps
-
-cask "acli"
 cask "brave-browser"
 cask "claude"
 cask "discord"
