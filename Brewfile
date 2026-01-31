@@ -2,6 +2,7 @@
 
 tap "atlassian/homebrew-acli"
 
+brew "acli"
 
 # Command line tools, utilities and languages
 brew "coreutils"
@@ -10,6 +11,7 @@ brew "findutils"
 brew "ast-grep"
 brew "git"
 brew "git-filter-repo"
+brew "git-flow"
 brew "bash"
 brew "curl"
 brew "direnv"
@@ -18,6 +20,8 @@ brew "gpg"
 brew "gawk"
 brew "less"
 brew "tree"
+brew "lsd"
+brew "screen"
 brew "vim"
 brew "wget"
 brew "whois"
@@ -35,6 +39,8 @@ brew "libpq" # postgres c-api
 brew "jq"
 brew "gh"
 brew "zoxide"
+brew "act"
+brew "mas"
 
 brew "go-task"
 
@@ -43,9 +49,8 @@ brew "go-task"
 brew "asdf", postinstall: "${HOMEBREW_PREFIX}/bin/asdf plugin add dotnet && ${HOMEBREW_PREFIX}/bin/asdf plugin add nodejs && ${HOMEBREW_PREFIX}/bin/asdf plugin add python"
 
 # System runtimes (for asdf fallbacks and other tool dependencies)
-#cask "dotnet-sdk"
-#brew "node"
-#brew "python3"
+brew "ruby"
+brew "tcpdump"
 
 # ZSH Plugins and shell
 brew "zsh"
@@ -57,14 +62,15 @@ brew "starship", postinstall: "${HOMEBREW_PREFIX}/bin/starship preset nerd-font-
 
 # Containerization
 brew "kubernetes-cli"
-#cask "docker"
-#cask "podman-desktop"
+cask "docker-desktop"
 
 # Devops
+brew "awscli"
 brew "terraform"
 brew "terragrunt"
 
 # Apps
+cask "1password-cli"
 cask "brave-browser"
 cask "claude"
 cask "discord"
@@ -82,6 +88,8 @@ cask "datagrip"
 cask "rider"
 cask "webstorm"
 cask "visual-studio-code"
+
+cask "logi-options+"
 
 
 # Fonts

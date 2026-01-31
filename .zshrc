@@ -93,6 +93,7 @@ plugins=(
     direnv
     macos
     starship
+    zoxide
 )
 
 # Keybindings

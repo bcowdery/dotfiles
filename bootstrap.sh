@@ -46,6 +46,7 @@ function help() {
     echo "  install   - Install all installers, apps, and copy dotfiles to the home directory and create symlinks for user scripts."
     echo "  update    - Update all installed apps, and copy dotfiles to the home directory and create symlinks for user scripts."
     echo "  configure - Configure defaults for installed tools and language managers."
+    echo "  orphans   - List installed Homebrew packages not in the Brewfile."
     echo "  edit      - Edit a file or installer manifest using the \$EDITOR"
     echo "  help      - Show this help message"
     echo ""
@@ -94,6 +95,7 @@ function update() {
         update_asdf
         update_dotfiles
         update_scripts
+        brewfile_orphans
 
     else
         # run only the specified installer
@@ -175,6 +177,9 @@ main()
             ;;
         "configure")
             configure "${@:2}"
+            ;;
+        "orphans")
+            brewfile_orphans
             ;;
         "edit")
             edit "${@:2}"
