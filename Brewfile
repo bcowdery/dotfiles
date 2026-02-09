@@ -33,6 +33,7 @@ brew "starship", postinstall: "${HOMEBREW_PREFIX}/bin/starship preset nerd-font-
 brew "direnv"
 brew "zoxide"
 brew "screen"
+brew "tmux"
 
 cask "ghostty", postinstall: "mkdir -p ${HOME}/.config/ghostty && ln -s ./config/ghostty/config ${HOME}/.config/ghostty/config"
 
