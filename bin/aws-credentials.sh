@@ -203,7 +203,16 @@ export_credentials()
         aws configure set --profile "$profile" aws_access_key_id "$AWS_ACCESS_KEY_ID"
         aws configure set --profile "$profile" aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
         aws configure set --profile "$profile" aws_session_token "$AWS_SESSION_TOKEN"
-        aws configure set --profile "$profile" x_security_token_expires "${AWS_CREDENTIAL_EXPIRATION:-}"
+
+        # Write expiry directly to credentials file (aws configure set routes custom keys to ~/.aws/config)
+        local creds_file="${AWS_SHARED_CREDENTIALS_FILE:-$HOME/.aws/credentials}"
+        if [ -n "${AWS_CREDENTIAL_EXPIRATION:-}" ] && [ -f "$creds_file" ]; then
+            # Remove existing x_security_token_expires for this profile, then append after aws_session_token
+            sed -i '' "/^\[${profile}\]/,/^\[/{/^x_security_token_expires/d;}" "$creds_file"
+            sed -i '' "/^\[${profile}\]/,/^\[/{/^aws_session_token/a\\
+x_security_token_expires = ${AWS_CREDENTIAL_EXPIRATION}
+}" "$creds_file"
+        fi
 
         echo "✅ ${green}Exported to ${AWS_SHARED_CREDENTIALS_FILE:-~/.aws/credentials} as [${profile}]${reset}"
     done
