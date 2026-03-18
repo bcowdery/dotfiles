@@ -55,6 +55,7 @@ help()
     echo "Available commands:"
     echo "  export                          Export SSO credentials"
     echo "  clear                           Clear exported SSO credentials"
+    echo "  refresh                         Refresh credentials if expired (for awsAuthRefresh)"
     echo
     echo "Options:"
     echo "  -h                              Show help"
@@ -68,6 +69,7 @@ help()
     echo "  $(basename $0) export -p dev -c default --sso-login"
     echo "  $(basename $0) export --profile=dev --credentials-file-profiles=dev,default --sso-login"
     echo "  $(basename $0) clear --credentials-file-profiles=default"
+    echo "  $(basename $0) refresh -p dev -c dev,default"
 }
 
 # Command to execute
@@ -81,7 +83,7 @@ logout=false
 
 # Check if first argument is a command
 case "$1" in
-    "export"|"clear")
+    "export"|"clear"|"refresh")
         command="$1"
         shift
         ;;
@@ -189,7 +191,7 @@ export_credentials()
     # - AWS_ACCESS_KEY_ID
     # - AWS_SECRET_ACCESS_KEY
     # - AWS_SESSION_TOKEN
-    eval "$(aws configure export-credentials --profile "$sso_profile" --format env-no-export)"
+    eval "$(aws configure export-credentials --profile "$sso_profile" --format env-no-export 2>/dev/null)"
 
     # Split comma-separated credentials_profiles into an array
     IFS=',' read -ra profiles <<< "$credentials_profiles"
@@ -201,6 +203,7 @@ export_credentials()
         aws configure set --profile "$profile" aws_access_key_id "$AWS_ACCESS_KEY_ID"
         aws configure set --profile "$profile" aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
         aws configure set --profile "$profile" aws_session_token "$AWS_SESSION_TOKEN"
+        aws configure set --profile "$profile" x_security_token_expires "${AWS_CREDENTIAL_EXPIRATION:-}"
 
         echo "✅ ${green}Exported to ${AWS_SHARED_CREDENTIALS_FILE:-~/.aws/credentials} as [${profile}]${reset}"
     done
@@ -231,6 +234,117 @@ clear_credentials()
     done
 }
 
+# Check if credentials are still valid (not expired)
+#
+# Returns 0 if credentials are valid, 1 if they need refresh.
+#
+credentials_are_valid()
+{
+    # Get the first profile from the comma-separated list
+    local first_profile
+    first_profile=$(echo "$credentials_profiles" | cut -d',' -f1 | xargs)
+
+    # Try to read the expiry timestamp from the credentials file
+    local expires
+    expires=$(aws configure get x_security_token_expires --profile "$first_profile" 2>/dev/null || true)
+
+    if [ -n "$expires" ]; then
+        # Parse ISO 8601 timestamp to epoch using gdate (coreutils)
+        if command -v gdate &>/dev/null; then
+            local expires_epoch now_epoch
+            expires_epoch=$(gdate -d "$expires" +%s 2>/dev/null || echo 0)
+            now_epoch=$(gdate +%s)
+
+            if [ "$expires_epoch" -gt "$now_epoch" ]; then
+                echo "⏭️  ${dim}Credentials still valid (expires: ${expires}), skipping refresh.${reset}"
+                return 0
+            fi
+        fi
+    fi
+
+    # Fallback: check credentials file mtime — skip if refreshed < 120s ago
+    local creds_file="${AWS_SHARED_CREDENTIALS_FILE:-$HOME/.aws/credentials}"
+    if [ -f "$creds_file" ]; then
+        local file_epoch now_epoch age
+        if command -v gdate &>/dev/null; then
+            file_epoch=$(gdate -r "$creds_file" +%s 2>/dev/null || echo 0)
+            now_epoch=$(gdate +%s)
+        else
+            file_epoch=$(date -r "$creds_file" +%s 2>/dev/null || echo 0)
+            now_epoch=$(date +%s)
+        fi
+        age=$(( now_epoch - file_epoch ))
+        if [ "$age" -lt 120 ]; then
+            echo "⏭️  ${dim}Credentials file modified ${age}s ago (< 120s), skipping refresh.${reset}"
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+# Poll AWS STS until credentials are active
+#
+# Accepts no arguments.
+#
+poll_for_activation()
+{
+    local first_profile
+    first_profile=$(echo "$credentials_profiles" | cut -d',' -f1 | xargs)
+
+    local elapsed=0
+    local max_wait=30
+    local interval=2
+
+    echo
+    echo "⏳ ${bold}Waiting for credentials to activate...${reset}"
+
+    while [ "$elapsed" -lt "$max_wait" ]; do
+        if aws sts get-caller-identity --profile "$first_profile" &>/dev/null; then
+            echo "✅ ${green}Credentials are active.${reset}"
+            return 0
+        fi
+        sleep "$interval"
+        elapsed=$(( elapsed + interval ))
+        echo "   ${dim}Still waiting... (${elapsed}s/${max_wait}s)${reset}"
+    done
+
+    echo "⚠️  ${yellow}Timed out waiting for credential activation (${max_wait}s). They may activate shortly.${reset}"
+    return 0
+}
+
+# Refresh credentials with guards to prevent duplicate/rapid refreshes
+#
+# Accepts no arguments.
+#
+refresh_credentials()
+{
+    # Guard 1: skip if credentials are still valid
+    if credentials_are_valid; then
+        exit 0
+    fi
+
+    # Guard 2: acquire a lock to prevent concurrent refreshes
+    if [ -z "${AWS_CRED_REFRESH_LOCKED:-}" ]; then
+        export AWS_CRED_REFRESH_LOCKED=1
+        lockf -s -k -t 30 /tmp/aws-credentials-refresh.lock \
+            "$0" refresh -p "$sso_profile" -c "$credentials_profiles" || true
+        exit 0
+    fi
+
+    # Double-check after acquiring lock (another process may have refreshed)
+    if credentials_are_valid; then
+        exit 0
+    fi
+
+    # Do the actual refresh
+    sso_login
+    export_credentials
+
+    # Guard 3: poll until credentials activate
+    poll_for_activation
+}
+
 # Main script execution
 main()
 {
@@ -247,6 +361,9 @@ main()
         "clear")
             clear_credentials
             ;;
+        "refresh")
+            refresh_credentials
+            ;;
     esac
 
     # Optional logout
@@ -257,7 +374,7 @@ main()
 
 # Error handling
 trap '"Script interrupted!"; exit 130' INT
-trap '"Script failed on line $LINENO"; exit 1' ERR
+trap 'if [ "$command" = "refresh" ]; then exit 0; fi; echo "Script failed on line $LINENO"; exit 1' ERR
 
 # Run the main function
 main "$@"
